@@ -12,10 +12,6 @@ class Persona:
         #calcular edad
         return str(a)
 
-    def __str__(self):
-        return "{} {}".format(self.nombre, self.edad)
-    
-
 class Alumno(Persona):
     def __init__(self):
         nivel_conocimiento = 10
@@ -28,7 +24,8 @@ class Alumno(Persona):
         if nivel_conocimiento>100:
             nivel_conocimiento=100
 
-        
+    def __str__(self):
+        return "{} {} \nRamos: {} \nNivel de Conocimiento {}".format(self.nombre, self.edad, self.ramos,str(self.nivel_conocimiento) )
 
 class Profesor(Persona):
     def __init__(self,seccion):
