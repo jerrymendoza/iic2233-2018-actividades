@@ -8,12 +8,12 @@ class Persona:
         self.f_nacimiento=date(fecha_nacimiento) #dia/mes/anno
 
 	def edad(self):
-
-
-        return str(0)
+        a=0
+        #calcular edad
+        return str(a)
 
     def __str__(self):
-        print(self.nombre+" "+self.edad())
+        return "{} {}".format(self.nombre, self.edad)
     
 
 class Alumno(Persona):
@@ -30,19 +30,20 @@ class Profesor(Persona):
         self.seccion = seccion
 
 	def ensennar():
-        
         pass
 
     def __str__(self):
-        print(self.nombre+" "+self.edad())
+        return "{} {}".format(self.nombre, self.edad)
 
 class Ayudante(Alumno):
-    def __init__(self):
-
+    def __init__(self,seccion):
+        self.seccion = seccion
+        self.nivel_conocimiento = 75
 
     def ensennar():
         pass
 
     def __str__(self):
-        print(self.nombre+" "+self.edad())
+        return "{} {}".format(self.nombre, self.edad)
+
 
