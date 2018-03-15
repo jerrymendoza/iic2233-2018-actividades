@@ -22,7 +22,12 @@ class Alumno(Persona):
         ramos=[]
 
     def estudiar(self):
-        nivel_conocimiento += random.randrange(5,10)
+        if nivel_conocimiento<100 and nivel_conocimiento>:
+            nivel_conocimiento += random.randrange(5,10)
+
+        if nivel_conocimiento>100:
+            nivel_conocimiento=100
+
         
 
 class Profesor(Persona):
