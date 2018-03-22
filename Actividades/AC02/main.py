@@ -19,7 +19,7 @@ class PAWControl:
         :param path: path al archivo de clientes
         :return: estructura de datos con la info de clientes
         """
-        dic=[]
+        dic={}
         with open(path, "r", encoding="utf-8") as file:
             for line in file:
                 name, passport = line.strip("\n").split(",")
@@ -56,7 +56,7 @@ class PAWControl:
             for line in file:
                 passport, fid, seat = line.strip("\n").split(",")
                 # COMPLETAR PROCESAMIENTO DESDE AQUÍ
-                cola.append(passport,fid,int(seat)) #agrega una tupla, con los 3 elementos  
+                cola.append((passport,fid,int(seat))) #agrega una tupla, con los 3 elementos  
                 # HASTA AQUÍ
         # PONER RETORNO
         return cola
@@ -91,7 +91,7 @@ class PAWControl:
             #reserva[1]=fid
             #reserva[2]=seat
 
-            if not self.flights[reserva[1]].passengers[reserva[2]] and reserva[0] not in self.flights[reserva[1]].passengers :
+            if not self.flights[reserva[1]].passengers[reserva[2]]:
                 self.flights[reserva[1]].passengers[reserva[2]]=reserva[0]
             else:
                 self.rejected.append(reserva)
@@ -117,7 +117,7 @@ class PAWControl:
 
     def passengers_to_destination(self, destination):
         
-        
+
         # COMPLETAR BORRANDO pass
 
         pass
