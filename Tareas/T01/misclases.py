@@ -45,12 +45,15 @@ class Galaxia:
         else:
             print("Ya tienes una Torre de defensa!")
 
-    def generar_unidades(self,planeta_index):
+    def generar_unidades(self,planeta_index,cantidad=1,tipo="soldados"):
         if self.planetas[planeta_index].cuartel:
-            pass
-
+            if self.planetas[planeta_index].costo_soldado[0]*cantidad <= self.minerales and self.planetas[planeta_index].costo_soldado[0]*cantidad <= self.deuterio:
+                self.planetas[planeta_index].soldados += cantidad
+            else:
+                print("Recursos insuficientes")
         else:
             print("Primero necesitas un Cuartel")
+
 
 
 
