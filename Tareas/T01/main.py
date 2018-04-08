@@ -1,11 +1,11 @@
 
-from lib import read_csv,poblar 
+from lib import read_csv,poblar,elegir_galaxia,elegir_planeta 
 from misclases import Galaxia,Maestro,Aprendiz,Asesino
 
 
 
 galaxias=[]
-seleccion=(None,None)
+actual=[None,None]
 #print(read_csv('planetas.csv','planeta'))
 
 
@@ -65,17 +65,32 @@ while True:
                     if seleccion2a =='1':
                         galaxias[-1].planetas.append(Maestro(n))
                         break
-                    elif seleccion2 == '2':
+                    elif seleccion2a == '2':
                         galaxias[-1].planetas.append(Aprendiz(n))
                         break
-                    elif seleccion2 == '3':
+                    elif seleccion2a == '3':
                         galaxias[-1].planetas.append(Asesino(n))
                         break 
                     else:
                         print("No valido!")
+
             elif seleccion2 == '2':
-                #preguntar por planeta conquistado incial
-                #los otros con 75% de su poblacion maxima
+                print("Elegir Planeta incial para Galaxia {}".format(galaxias[-1].nombre))
+                aux=0
+                for planeta in galaxias[-1].planetas:
+                    aux+=1
+                    print("({}) {} de la Raza {}".format(aux,planeta.nombre.upper(),planeta.raza.upper()) )
+
+                select=int(input("Seleccion: "))
+                select-=1
+
+                for i in range(len(galaxias[-1].planetas)):
+                    if select!=i:
+                        galaxias[-1].planetas[i].poblar75()
+                    else:
+                        galaxias[-1].planetas[select].conquistado=True
+                print(galaxias[-1])
+                print("Estas Listo para Jugar!")
 
                 break
             else:
@@ -86,7 +101,10 @@ while True:
 
     elif seleccion == '3':
         print("- Modificar Galaxia -".center(80))
+        actual=elegir_galaxia(galaxias,actual)
 
+
+        # usar actual[0]
         menu3 = {}
         menu3['1']="Agregar Planeta (sin conquistar)" 
         menu3['2']="Eliminar Planeta ya conquistado"
@@ -104,7 +122,7 @@ while True:
             seleccion3=input("Seleccion:")
             print('\n')  
             if seleccion3 =='1':
-                print("- {} -".format(menu3['2']).center(80))
+                print("- {} -".format(menu3['1']).center(80))
             elif seleccion3 == '2':
                 print("- {} -".format(menu3['2']).center(80))
             elif seleccion3 == '3':
@@ -122,35 +140,49 @@ while True:
 
     elif seleccion == '4':
         print("- Consultar Galaxias -".center(80))
-        if len(galaxias):
-            print(*galaxias)
+        
+        menu4 = {}
+        menu4['1']="Informacion General Usuario"
+        menu4['2']="Informacion General Planeta"
+        menu4['3']="Mejor Galaxia"
+        menu4['4']="Ranking de Planetas"
+        menu4['5']="Volver"
 
-            menu4 = {}
-            menu4['1']="Informacion General Usuario" 
-            menu4['2']="Informacion General Planeta"
-            menu4['3']="Mejor Galaxia"
-            menu4['4']="Ranking de Planetas"
-            menu4['5']="Volver"
+        while True:
+            opciones4=list(menu4.keys())
+            opciones4.sort()
+            for entry in opciones4:
+                print("     ({}) {}".format(entry, menu4[entry]))
+            seleccion4=input("Seleccion:")
+            print('\n')  
+            if seleccion4 =='1':
+                print("- {} -".format(menu4['1']).center(80))
+                for galaxia in galaxias:
+                    galaxia.mostrar_conquistados()
 
-            while True:
-                opciones4=list(menu4.keys())
-                opciones4.sort()
-                for entry in opciones4:
-                    print("     ({}) {}".format(entry, menu4[entry]))
-                seleccion4=input("Seleccion:")
-                print('\n')  
-                if seleccion4 =='1':
-                    print("1")
-                elif seleccion4 == '2':
-                    print("2")
-                elif seleccion4 == '3':
-                    print("3")
-                elif seleccion4 == '4':
-                    print("4")
-                elif seleccion4 == '5': 
-                    break
-                else: 
-                    print("No valido!")
+            elif seleccion4 == '2':
+
+                actual=elegir_galaxia(galaxias,actual)
+                actual=elegir_planeta(galaxias,actual) 
+                print("- {} -".format(menu4['2']).center(80))
+                print("Informacion de Planeta {} de la Galaxia {}:".format(
+                    galaxias[actual[0]].planetas[actual[1]].nombre,
+                    galaxias[actual[0]].nombre))
+                galaxias[actual[0]].planetas[actual[1]].info_general()
+
+            elif seleccion4 == '3':
+                print("3")
+
+            elif seleccion4 == '4':
+                actual=elegir_galaxia(galaxias,actual)
+                # usar actual[0]
+                print("4")
+
+            elif seleccion4 == '5': 
+                break
+                
+            else: 
+                print("No valido!")
 
         else:
             print("No hay galaxias aun!")
@@ -159,7 +191,12 @@ while True:
 
     elif seleccion == '5':
         print("- Jugar -".center(80))
-        #primero elegir galaxia y planeta 
+        #primero elegir galaxia y planeta
+
+        actual=elegir_galaxia(galaxias,actual)
+        # usar actual[0]
+        actual=elegir_planeta(galaxias,actual)
+
         menu5 = {}
         menu5['1']="Construir Edificio" 
         menu5['2']="Generar Unidades"
@@ -175,7 +212,8 @@ while True:
             seleccion5=input("Seleccion:")
             print('\n')  
             if seleccion5 =='1':
-                print("1")
+                print("- {} -".format(menu5['1']).center(80))
+                print(" (1) ")
             elif seleccion5 == '2':
                 print("2")
             elif seleccion5 == '3':

@@ -82,14 +82,27 @@ class Galaxia:
 
     def numero_planetas_conquistados(self):
         n=0
-        if len(self.planestas):
+        if len(self.planetas):
             return 0
         else:
             for planeta in self.planetas:
                 if planeta.conquistado:
                     n+=1
         return n
-        
+
+    def mostrar_conquistados(self):
+        print("Galaxia {} ".format(self.nombre.upper()))
+        print("Minerales: {} Deuterio: {}".format(self.minerales,self.deuterio))
+        if self.numero_planetas_conquistados()>0:
+            print("  Planetas:")
+            for i in self.planetas:
+                if i.conquistado:
+                    print("           {}".format(i.nombre))
+
+        else:
+            print("No tiene Planetas conquitados")
+        print("\n")
+
 class Planeta:
     """docstring for Planeta"""
     def __init__(self, nombre,**kwargs):
@@ -179,6 +192,37 @@ class Planeta:
         total+=self.torre
         return round(total, 1)
 
+    def poblar75(self):
+        if self.raza=="maestro":
+            self.soldados=37
+            self.magos=38
+        elif self.raza=="aprendiz":
+            self.soldados=112
+        elif self.raza=="asesino":
+            self.soldados=300
+
+    def info_general(self):
+        print("Raza: "+self.raza)
+        print("Poblacion actual:"+str(self.soldados+self.magos))
+        print("Ultima Recoleccion: "+self.ultima_recoleccion.strftime("%Y-%m-%d %H:%M:%S"))
+        print("Nivel de Ataque:"+str(self.nivel_ataque))
+        print("Nivel Economia:"+str(self.nivel_economia))
+        if self.conquistado:
+            print("Conquistado: Si")
+        else:
+            print("Conquistado: No")
+        if self.cuartel:
+            print("Cuartel: Si")
+        else:
+            print("Cuartel: No")
+        if self.torre:
+            print("Torre:Si")
+        else:
+            print("Torre: No")
+        print("Nivel Evolucion:"+str(self.evolucion()))
+        print("Tasa de Minerales: "+str(self.tasa_minerales))
+        print("Tasa de deuterio: "+str(self.tasa_deuterio))
+
 class Maestro(Planeta):
     """docstring for Maestro"""
     def __init__(self, nombre,**kwargs):
@@ -200,7 +244,7 @@ class Aprendiz(Planeta):
     def __init__(self, nombre,**kwargs):
         super().__init__(nombre, **kwargs)
         self.raza = "aprendiz"
-        self.poblacion_max = 150
+        self.poblacion_max = 150 #112
         self.__soldados = kwargs.get('soldados',0) 
         self.costo_soldado = (300,400)
         self.ataque_soldado = random.randint(30, 60)
@@ -215,7 +259,7 @@ class Asesino(Planeta):
     def __init__(self, nombre, **kwargs):
         super().__init__(nombre, **kwargs)
         self.raza = "asesino"
-        self.poblacion_max = 400
+        self.poblacion_max = 400   #300
         self.__soldados = kwargs.get('soldados',0) 
         self.costo_soldado = (100,200)
         self.ataque_soldado = random.randint(40, 45)

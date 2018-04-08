@@ -79,4 +79,21 @@ def poblar(galaxias):
 
 
 
+def elegir_galaxia(galaxias,actual):
+    if len(galaxias)>0:
+        for i in range(len(galaxias)):
+            print("     ({}) {}".format(i+1,galaxias[i].nombre))
+        actual[0]=int(input("Elegir Galaxia:"))  
+    else: 
+        print("No hay Galaxias creadas")
+    return actual
+
+def elegir_planeta(galaxias,actual):
+    if len(galaxias[actual[0]].planetas)>0:
+        for i in range(len(galaxias[actual[0]].planetas)):
+            print("     ({}) {}".format(i+1,galaxias[actual[0]].planetas[i].nombre))
+        actual[1]=int(input("Elegir Planeta:"))
+    else:
+        print("No hay Planetas aca!")
+    return actual
 
