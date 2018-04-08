@@ -21,7 +21,8 @@ class Galaxia:
         s+="\n"
         return s
 
-    def construir_cuartel(self,planeta_index):
+
+    def construir_cuartel(self,planeta_index): 
         if not self.planetas[planeta_index].cuartel:
             if int(self.minerales) >= 200 and int(self.deuterio) >= 500:
                 self.minerales -= 200
@@ -45,18 +46,32 @@ class Galaxia:
         else:
             print("Ya tienes una Torre de defensa!")
 
-    def generar_unidades(self,planeta_index,cantidad=1,tipo="soldados"):
+    def generar_unidades(self,planeta_index,cantidad=1,tipo="soldado"):
         if self.planetas[planeta_index].cuartel:
-            if self.planetas[planeta_index].costo_soldado[0]*cantidad <= self.minerales and self.planetas[planeta_index].costo_soldado[0]*cantidad <= self.deuterio:
-                self.planetas[planeta_index].soldados += cantidad
-            else:
-                print("Recursos insuficientes")
+            if tipo=="soldado":
+                if self.planetas[planeta_index].costo_soldado[0]*cantidad <= self.minerales and self.planetas[planeta_index].costo_soldado[1]*cantidad <= self.deuterio:
+                    self.planetas[planeta_index].soldados += cantidad
+                else:
+                    print("Recursos insuficientes")
+
+            elif tipo=="mago" and self.planetas[planeta_index].raza == "maestro":
+                if self.planetas[planeta_index].costo_mago[0]*cantidad <= self.minerales and self.planetas[planeta_index].costo_mago[1]*cantidad <= self.deuterio:
+                    self.planetas[planeta_index].magos += cantidad
+                else:
+                    print("Recursos insuficientes")
         else:
             print("Primero necesitas un Cuartel")
 
+    def recolectar_recursos(self):
+        #mejorar nivel de ataque o nivel de economia
+        pass
 
+    def invadir_planeta(self):
+        pass
 
-
+    def comprar_planeta(self):
+        #1.000.000 minerales y 500.000 deuterio
+        pass
 
 class Planeta:
     """docstring for Planeta"""
