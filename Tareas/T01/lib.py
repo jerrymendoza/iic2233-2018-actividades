@@ -1,3 +1,4 @@
+from misclases import Galaxia,Maestro,Aprendiz,Asesino
 def read_csv(path,tipe):
     aux = []
     aux2 = []
@@ -15,8 +16,58 @@ def read_csv(path,tipe):
         for titulo in planetas_titulos:
             aux2.append(aux[titulo])
 
-        aux = list(zip(*aux2))
+        return list(zip(*aux2))
     elif tipe=="galaxia":
-        aux = list(zip(*aux.values()))
+        return list(zip(*aux.values()))
 
-    return aux
+
+
+
+
+def poblar(galaxias):   
+    for i in read_csv('galaxias.csv','galaxia'):
+        galaxias.append(Galaxia(i[0],minerales=int(i[1]),deuterio=int(i[2])))
+    
+    for planeta in read_csv('planetas.csv','planeta'):
+        for galaxia in galaxias:
+            if galaxia.nombre == planeta[1].lower():
+                if planeta[2].lower() == "maestro":
+                    galaxia.planetas.append(Maestro(
+                                   planeta[0],
+                                   magos=int(planeta[3]),
+                                   soldados=int(planeta[4]),
+                                   tasa_minerales=int(planeta[5]),
+                                   tasa_deuterio=int(planeta[6]),
+                                   #ultima_recoleccion=0,
+                                   nivel_ataque=int(planeta[8]),
+                                   nivel_economia=int(planeta[9]),
+                                   conquistado=bool(planeta[10]),
+                                   torre=bool(planeta[11]),
+                                   cuartel=bool(planeta[12])
+                                   ))
+                elif planeta[2].lower() == "aprendiz":
+                    galaxia.planetas.append(Aprendiz(
+                                   planeta[0],
+                                   soldados=int(planeta[4]),
+                                   tasa_minerales=int(planeta[5]),
+                                   tasa_deuterio=int(planeta[6]),
+                                   #ultima_recoleccion=0,
+                                   nivel_ataque=int(planeta[8]),
+                                   nivel_economia=int(planeta[9]),
+                                   conquistado=bool(planeta[10]),
+                                   torre=bool(planeta[11]),
+                                   cuartel=bool(planeta[12])
+                                   ))
+                elif planeta[2].lower() == "asesino":
+                    galaxia.planetas.append(Asesino(
+                                   planeta[0],
+                                   soldados=int(planeta[4]),
+                                   tasa_minerales=int(planeta[5]),
+                                   tasa_deuterio=int(planeta[6]),
+                                   #ultima_recoleccion=0,
+                                   nivel_ataque=int(planeta[8]),
+                                   nivel_economia=int(planeta[9]),
+                                   conquistado=bool(planeta[10]),
+                                   torre=bool(planeta[11]),
+                                   cuartel=bool(planeta[12])
+                                   ))

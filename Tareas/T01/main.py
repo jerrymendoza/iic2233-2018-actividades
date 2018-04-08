@@ -1,23 +1,31 @@
-from lib import read_csv 
+
+from lib import read_csv,poblar 
 from misclases import Galaxia,Maestro,Aprendiz,Asesino
 
 
-planeta1 = Maestro("uno",tasa_minerales=20,soldados=30)
-print(planeta1.soldados)
-planeta1.soldados = 10
-print(planeta1.soldados)
-planeta1.magos = 101
-print(planeta1.magos)
-planeta1.magos = 90
-print(planeta1.magos)
-print("tasa:")
-print(planeta1.tasa_minerales)
+#planeta1 = Maestro("uno",tasa_minerales=20,soldados=30)
+#print(planeta1.soldados)
+#planeta1.soldados = 10
+#print(planeta1.soldados)
+#planeta1.magos = 101
+#print(planeta1.magos)
+#planeta1.magos = 90
+#print(planeta1.magos)
+#print("tasa:")
+#print(planeta1.tasa_minerales)
 
+
+#print(planeta1)
 
 #print(read_csv("planetas.csv","planeta"))
 
 #print(read_csv("galaxias.csv","galaxia"))
 galaxias=[]
+#poblar(galaxias)
+#print(*galaxias)
+
+poblar(galaxias)
+print(*galaxias)
 
 print("{} ChauCraft {}".format("*"*20,"*"*20).center(80))
 

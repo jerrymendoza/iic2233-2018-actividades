@@ -1,5 +1,7 @@
+
 import random
 from datetime import datetime
+
 class Galaxia:
     """docstring for Galaxia"""
     def __init__(self, nombre,**kwargs):
@@ -9,11 +11,14 @@ class Galaxia:
         self.deuterio = kwargs.get('deuterio',0)
     def __repr__(self):
         s = "***** {} *****\n".format(self.nombre.upper())
+        s+="Minerales: {} Deuterio: {}\n".format(self.minerales,self.deuterio)
         if len(self.planetas)>0:
             for i in self.planetas:
-                s+="- {} \n".format(i.nombre.capitalize())
+                s+="-{} \n".format(i.nombre.upper())
+                s+="    -{}\n".format(i)
         else:
-            s+="Esta Galaxia no tiene planetas"
+            s+="Esta Galaxia no tiene planetas \n"
+        s+="\n"
         return s
 
 
@@ -21,14 +26,17 @@ class Planeta:
     """docstring for Planeta"""
     def __init__(self, nombre,**kwargs):
         self.nombre = nombre.lower()
-        self.tasa_minerales = kwargs.get('tasa_minerales') #tasa minerales x segundo
-        self.tasa_deuterio = kwargs.get('tasa_deuterio',0)
-        self.cuartel = kwargs.get('cuartel',False)
-        self.torre = kwargs.get('torre',False)
-        self.ultima_recoleccion = kwargs.get('ultima_recoleccion',datetime.now())
+        self.tasa_minerales = kwargs.get('tasa_minerales',
+                                         random.randint(1, 10)) 
+        self.tasa_deuterio = kwargs.get('tasa_deuterio',
+                                         random.randint(5, 15))
+        self.ultima_recoleccion=kwargs.get('ultima_recoleccion',
+                                         datetime.now())
         self.__nivel_ataque = kwargs.get('nivel_ataque',0) 
         self.__nivel_economia = kwargs.get('nivel_economia',0)
         self.conquistado = kwargs.get('conquistado',False)
+        self.cuartel = kwargs.get('cuartel',False)
+        self.torre = kwargs.get('torre',False)
         self.__evolucion = 0
 
 
@@ -42,18 +50,27 @@ class Planeta:
         return self.__nivel_ataque
 
     @nivel_ataque.setter
-    def evolucion(self,p):
+    def nivel_ataque(self,p):
         if p <= 3:
-            self.__nivel_ataque = p
+            self.__nivel_ataque += p
 
     @property
     def nivel_economia(self):
-        return self.__nivel_econo
+        return self.__nivel_economia
 
     @nivel_economia.setter
+    def nivel_economia(self,p):
+        if p <= 3:
+            self.__nivel_economia += p
+
+    @property
+    def evolucion(self):
+        return self.__evolucion
+
+    @evolucion.setter
     def evolucion(self,p):
         if p <= 3:
-            self.__nivel_economia = p
+            self.__evolucion = p
 
 
 class Maestro(Planeta):
@@ -73,8 +90,18 @@ class Maestro(Planeta):
         self.grito = "¡Nuestro conocimiento nos ha otorgado uan victoria más!"
 
     def __repr__(self):
-        s = "{}".format(self.raza) 
-
+        s = [self.raza, 
+             str(self.soldados), 
+             str(self.magos),
+             str(self.ultima_recoleccion.strftime("%Y-%m-%d %H:%M:%S")),
+             str(self.nivel_ataque),
+             str(self.nivel_economia),
+             str(self.conquistado),
+             str(self.cuartel),
+             str(self.torre),
+             str(self.evolucion)]
+        s = ','.join(s)
+        return s
     @property
     def soldados(self):
         return self.__soldados
@@ -106,6 +133,18 @@ class Aprendiz(Planeta):
         self.grito = "¡Con una gran defensa y medicinas, nuestros soldados " \
                      "son invencibles!"        
 
+    def __repr__(self):
+        s = [self.raza, 
+             str(self.soldados),
+             str(self.ultima_recoleccion.strftime("%Y-%m-%d %H:%M:%S")),
+             str(self.nivel_ataque),
+             str(self.nivel_economia),
+             str(self.conquistado),
+             str(self.cuartel),
+             str(self.torre),
+             str(self.evolucion)]
+        s = ','.join(s)
+        return s
 
     @property
     def soldados(self):
@@ -128,6 +167,19 @@ class Asesino(Planeta):
         self.__vida_soldado = random.randint(250, 270)
         self.grito = "¡El poder de las sombras es lo unico necesario para " \
                      "ganar estas batallas!"
+
+    def __repr__(self):
+        s = [self.raza, 
+             str(self.soldados), 
+             str(self.ultima_recoleccion.strftime("%Y-%m-%d %H:%M:%S")),
+             str(self.nivel_ataque),
+             str(self.nivel_economia),
+             str(self.conquistado),
+             str(self.cuartel),
+             str(self.torre),
+             str(self.evolucion)]
+        s = ','.join(s)
+        return s
 
     @property
     def soldados(self):
