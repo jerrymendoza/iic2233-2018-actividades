@@ -1,4 +1,6 @@
 from misclases import Galaxia,Maestro,Aprendiz,Asesino
+from datetime import datetime
+
 def read_csv(path,tipe):
     aux = []
     aux2 = []
@@ -38,7 +40,9 @@ def poblar(galaxias):
                                    soldados=int(planeta[4]),
                                    tasa_minerales=int(planeta[5]),
                                    tasa_deuterio=int(planeta[6]),
-                                   #ultima_recoleccion=0,
+                                   ultima_recoleccion=
+                                                datetime.strptime(planeta[7],
+                                                "%Y-%m-%d %H:%M:%S"),
                                    nivel_ataque=int(planeta[8]),
                                    nivel_economia=int(planeta[9]),
                                    conquistado=bool(planeta[10]),
@@ -51,7 +55,9 @@ def poblar(galaxias):
                                    soldados=int(planeta[4]),
                                    tasa_minerales=int(planeta[5]),
                                    tasa_deuterio=int(planeta[6]),
-                                   #ultima_recoleccion=0,
+                                   ultima_recoleccion=
+                                                datetime.strptime(planeta[7],
+                                                "%Y-%m-%d %H:%M:%S"),
                                    nivel_ataque=int(planeta[8]),
                                    nivel_economia=int(planeta[9]),
                                    conquistado=bool(planeta[10]),
@@ -64,7 +70,9 @@ def poblar(galaxias):
                                    soldados=int(planeta[4]),
                                    tasa_minerales=int(planeta[5]),
                                    tasa_deuterio=int(planeta[6]),
-                                   #ultima_recoleccion=0,
+                                   ultima_recoleccion=
+                                                datetime.strptime(planeta[7],
+                                                "%Y-%m-%d %H:%M:%S"),
                                    nivel_ataque=int(planeta[8]),
                                    nivel_economia=int(planeta[9]),
                                    conquistado=bool(planeta[10]),
