@@ -3,44 +3,66 @@ from lib import read_csv,poblar
 from misclases import Galaxia,Maestro,Aprendiz,Asesino
 
 
-#planeta1 = Maestro("uno",tasa_minerales=20,soldados=30)
-#print(planeta1.soldados)
-#planeta1.soldados = 10
-#print(planeta1.soldados)
-#planeta1.magos = 101
-#print(planeta1.magos)
-#planeta1.magos = 90
-#print(planeta1.magos)
-#print("tasa:")
-#print(planeta1.tasa_minerales)
 
-
-#print(planeta1)
-
-#print(read_csv("planetas.csv","planeta"))
-
-#print(read_csv("galaxias.csv","galaxia"))
 galaxias=[]
-#poblar(galaxias)
-#print(*galaxias)
+#print(read_csv('planetas.csv','planeta'))
 
-poblar(galaxias)
-print(*galaxias)
+
 
 print("{} ChauCraft {}".format("*"*20,"*"*20).center(80))
 
-print("     (0) Cargar Archivos csv")
-print("     (1) Crear Galaxia")
-print("     (2) Modificar una Galaxia")
-print("     (3) Consultar sobre una Galaxia")
-print("     (4) Jugar en una Galaxia")
+menu = {}
+menu['1']="Cargar Archivos csv" 
+menu['2']="Crear Galaxia"
+menu['3']="Modificar una Galaxia"
+menu['4']="Consultar sobre una Galaxia"
+menu['5']="Jugar en una Galaxia"
+menu['6']="Exit"
+while True: 
+    opciones=list(menu.keys())
+    opciones.sort()
+    for entry in opciones: 
+        print("     ({}) {}".format(entry, menu[entry]))
 
-input("\nOpcion: ")
+    seleccion=input("Seleccion:") 
+    if seleccion =='1': 
+        print("cargar csv")
+        poblar(galaxias)
 
-print("(1) Crear Galaxia =>")
-nombre_galaxia=input("Nombre para la Galaxia nueva: ")
+    elif seleccion == '2': 
+        print("crear galaxia")
+        nombre_galaxia=input("Nombre para la Galaxia nueva: ")
+        galaxias.append(Galaxia(nombre_galaxia))
 
-galaxias.append(Galaxia(nombre_galaxia))
+    elif seleccion == '3':
+        print("modificar galaxia")
 
-for i in galaxias:
-    print(i)
+    elif seleccion == '4':
+        print("Consultar galaxias")
+        if len(galaxias):
+            print(*galaxias)
+        else:
+            print("No hay galaxias aun!")
+
+    elif seleccion == '5':
+        print("Jugar")
+        #visitar un planeta
+            #(conquistado)
+            #construir edificio
+            #generar unidades
+            #recolectar recursos
+            #realizar mejoras
+            
+            #(no conquistado)
+            #invadir planeta
+            #comprar el planeta
+
+        
+
+    elif seleccion == '6': 
+        break
+
+    else: 
+        print("No valido!")
+
+

@@ -23,9 +23,6 @@ def read_csv(path,tipe):
         return list(zip(*aux.values()))
 
 
-
-
-
 def poblar(galaxias):   
     for i in read_csv('galaxias.csv','galaxia'):
         galaxias.append(Galaxia(i[0],minerales=int(i[1]),deuterio=int(i[2])))
@@ -45,9 +42,9 @@ def poblar(galaxias):
                                                 "%Y-%m-%d %H:%M:%S"),
                                    nivel_ataque=int(planeta[8]),
                                    nivel_economia=int(planeta[9]),
-                                   conquistado=bool(planeta[10]),
-                                   torre=bool(planeta[11]),
-                                   cuartel=bool(planeta[12])
+                                   conquistado=planeta[10]=="True",
+                                   torre=planeta[11]=="True",
+                                   cuartel=planeta[12]=="True"
                                    ))
                 elif planeta[2].lower() == "aprendiz":
                     galaxia.planetas.append(Aprendiz(
@@ -60,9 +57,9 @@ def poblar(galaxias):
                                                 "%Y-%m-%d %H:%M:%S"),
                                    nivel_ataque=int(planeta[8]),
                                    nivel_economia=int(planeta[9]),
-                                   conquistado=bool(planeta[10]),
-                                   torre=bool(planeta[11]),
-                                   cuartel=bool(planeta[12])
+                                   conquistado=planeta[10]=="True",
+                                   torre=planeta[11]=="True",
+                                   cuartel=planeta[12]=="True"
                                    ))
                 elif planeta[2].lower() == "asesino":
                     galaxia.planetas.append(Asesino(
@@ -75,7 +72,11 @@ def poblar(galaxias):
                                                 "%Y-%m-%d %H:%M:%S"),
                                    nivel_ataque=int(planeta[8]),
                                    nivel_economia=int(planeta[9]),
-                                   conquistado=bool(planeta[10]),
-                                   torre=bool(planeta[11]),
-                                   cuartel=bool(planeta[12])
+                                   conquistado=planeta[10]=="True",
+                                   torre=planeta[11]=="True",
+                                   cuartel=planeta[12]=="True"
                                    ))
+
+
+
+
