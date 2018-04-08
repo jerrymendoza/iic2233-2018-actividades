@@ -62,8 +62,15 @@ class Galaxia:
         else:
             print("Primero necesitas un Cuartel")
 
-    def recolectar_recursos(self):
-        #mejorar nivel de ataque o nivel de economia
+    def recolectar_recursos(self,planeta_index):
+        dif = datetime.now() - self.planetas[planeta_index].ultima_recoleccion
+        self.minerales += self.planetas[planeta_index].tasa_minerales*int(dif)
+        self.deuterio += self.planetas[planeta_index].tasa_deuterio*int(dif)
+        self.planetes[planeta_index].ultima_recoleccion=datetime.now()
+        print("Recoleccion de recursos completa")
+
+    def realizar_mejoras(self):
+        #mejorar nivel ataque o economia
         pass
 
     def invadir_planeta(self):
@@ -73,6 +80,16 @@ class Galaxia:
         #1.000.000 minerales y 500.000 deuterio
         pass
 
+    def numero_planetas_conquistados(self):
+        n=0
+        if len(self.planestas):
+            return 0
+        else:
+            for planeta in self.planetas:
+                if planeta.conquistado:
+                    n+=1
+        return n
+        
 class Planeta:
     """docstring for Planeta"""
     def __init__(self, nombre,**kwargs):

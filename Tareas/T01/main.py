@@ -5,6 +5,7 @@ from misclases import Galaxia,Maestro,Aprendiz,Asesino
 
 
 galaxias=[]
+seleccion=(None,None)
 #print(read_csv('planetas.csv','planeta'))
 
 
@@ -24,28 +25,167 @@ while True:
     for entry in opciones: 
         print("     ({}) {}".format(entry, menu[entry]))
 
-    seleccion=input("Seleccion:") 
+    seleccion=input("Seleccion:")
+    print('\n') 
     if seleccion =='1': 
-        print("cargar csv")
+        print("- Cargar CSV -".center(80))
         poblar(galaxias)
 
     elif seleccion == '2': 
-        print("crear galaxia")
+        print("- Crear Galaxia -".center(80))
         nombre_galaxia=input("Nombre para la Galaxia nueva: ")
         galaxias.append(Galaxia(nombre_galaxia))
 
+        while True:
+            menu2 = {}
+            menu2['1']="Agregar Planeta a Galaxia {}".format(galaxias[-1].nombre) 
+            menu2['2']="Terminar"
+            opciones2=list(menu2.keys())
+            opciones2.sort()
+            for entry in opciones2:
+                print("     ({}) {}".format(entry, menu2[entry]))
+            seleccion2=input("Seleccion:")
+            print('\n')  
+            if seleccion2 =='1':
+                print("- {} -".format(menu2['1']).center(80))
+                n=input("Nombre del nuevo planeta:")
+                print("\n")
+                print("Elegir Raza para {}".format(n).upper())
+                while True:
+                    menu2a = {}
+                    menu2a['1']="Maestro" 
+                    menu2a['2']="Aprendiz"
+                    menu2a['3']="Asesino"
+                    opciones2a=list(menu2a.keys())
+                    opciones2a.sort()
+                    for entry in opciones2a:
+                        print("     ({}) {}".format(entry, menu2a[entry]))
+                    seleccion2a=input("Seleccion:")
+                    print('\n')
+                    if seleccion2a =='1':
+                        galaxias[-1].planetas.append(Maestro(n))
+                        break
+                    elif seleccion2 == '2':
+                        galaxias[-1].planetas.append(Aprendiz(n))
+                        break
+                    elif seleccion2 == '3':
+                        galaxias[-1].planetas.append(Asesino(n))
+                        break 
+                    else:
+                        print("No valido!")
+            elif seleccion2 == '2':
+                #preguntar por planeta conquistado incial
+                #los otros con 75% de su poblacion maxima
+
+                break
+            else:
+                print("No valido!")
+        
+        #crear galaxia y planetas
+        #UN planeta debe quedar connquistado del principio
+
     elif seleccion == '3':
-        print("modificar galaxia")
+        print("- Modificar Galaxia -".center(80))
+
+        menu3 = {}
+        menu3['1']="Agregar Planeta (sin conquistar)" 
+        menu3['2']="Eliminar Planeta ya conquistado"
+        menu3['3']="Aumentar tasa minerales (sin conquistar)"
+        menu3['4']="Aumentar tasa deuterio (sin conquistar)"
+        menu3['5']="Aumentar soldados (sin conquistar)"
+        menu3['6']="Aumentar magos (sin conquistar)"
+        menu3['7']="Volver"
+
+        while True:
+            opciones3=list(menu3.keys())
+            opciones3.sort()
+            for entry in opciones3:
+                print("     ({}) {}".format(entry, menu3[entry]))
+            seleccion3=input("Seleccion:")
+            print('\n')  
+            if seleccion3 =='1':
+                print("- {} -".format(menu3['2']).center(80))
+            elif seleccion3 == '2':
+                print("- {} -".format(menu3['2']).center(80))
+            elif seleccion3 == '3':
+                print("- {} -".format(menu3['3']).center(80))
+            elif seleccion3 == '4':
+                print("- {} -".format(menu3['4']).center(80))
+            elif seleccion3 == '5':
+                print("- {} -".format(menu3['5']).center(80))
+            elif seleccion3 == '6':
+                print("- {} -".format(menu3['6']).center(80))
+            elif seleccion3 == '7': 
+                break
+            else: 
+                print("No valido!")
 
     elif seleccion == '4':
-        print("Consultar galaxias")
+        print("- Consultar Galaxias -".center(80))
         if len(galaxias):
             print(*galaxias)
+
+            menu4 = {}
+            menu4['1']="Informacion General Usuario" 
+            menu4['2']="Informacion General Planeta"
+            menu4['3']="Mejor Galaxia"
+            menu4['4']="Ranking de Planetas"
+            menu4['5']="Volver"
+
+            while True:
+                opciones4=list(menu4.keys())
+                opciones4.sort()
+                for entry in opciones4:
+                    print("     ({}) {}".format(entry, menu4[entry]))
+                seleccion4=input("Seleccion:")
+                print('\n')  
+                if seleccion4 =='1':
+                    print("1")
+                elif seleccion4 == '2':
+                    print("2")
+                elif seleccion4 == '3':
+                    print("3")
+                elif seleccion4 == '4':
+                    print("4")
+                elif seleccion4 == '5': 
+                    break
+                else: 
+                    print("No valido!")
+
         else:
             print("No hay galaxias aun!")
 
+       
+
     elif seleccion == '5':
-        print("Jugar")
+        print("- Jugar -".center(80))
+        #primero elegir galaxia y planeta 
+        menu5 = {}
+        menu5['1']="Construir Edificio" 
+        menu5['2']="Generar Unidades"
+        menu5['3']="Recolectar Recursos"
+        menu5['4']="Realizar Mejoras"
+        menu5['5']="Volver"
+
+        while True:
+            opciones5=list(menu5.keys())
+            opciones5.sort()
+            for entry in opciones5:
+                print("     ({}) {}".format(entry, menu5[entry]))
+            seleccion5=input("Seleccion:")
+            print('\n')  
+            if seleccion5 =='1':
+                print("1")
+            elif seleccion5 == '2':
+                print("2")
+            elif seleccion5 == '3':
+                print("3")
+            elif seleccion5 == '4':
+                print("4")
+            elif seleccion5 == '5': 
+                break
+            else: 
+                print("No valido!") 
         #visitar un planeta
             #(conquistado)
             #construir edificio
