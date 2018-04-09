@@ -83,7 +83,7 @@ def elegir_galaxia(galaxias,actual):
     if len(galaxias)>0:
         for i in range(len(galaxias)):
             print("     ({}) {}".format(i+1,galaxias[i].nombre))
-        actual[0]=int(input("Elegir Galaxia:"))  
+        actual[0]=int(input("Elegir Galaxia:"))-1  
     else: 
         print("No hay Galaxias creadas")
     return actual
@@ -92,8 +92,27 @@ def elegir_planeta(galaxias,actual):
     if len(galaxias[actual[0]].planetas)>0:
         for i in range(len(galaxias[actual[0]].planetas)):
             print("     ({}) {}".format(i+1,galaxias[actual[0]].planetas[i].nombre))
-        actual[1]=int(input("Elegir Planeta:"))
+        actual[1]=int(input("Elegir Planeta:"))-1
     else:
         print("No hay Planetas aca!")
     return actual
 
+def elegir_planeta_noconquistado(galaxias,actual):
+    aux=[]
+    if len(galaxias[actual[0]].planetas)>0:
+        for i in range(len(galaxias[actual[0]].planetas)):
+            if not galaxias[actual[0]].planetas[i].conquistado:
+                print("     ({}) {}".format(i+1,galaxias[actual[0]].planetas[i].nombre))
+            else:
+                aux.append(i)
+        actual[1]=int(input("Elegir Planeta:"))-1
+        while True:
+            if actual[1] in aux:
+                print("Planeta Conquistado, elegir planetas de la lista")
+                actual[1]=int(input("Elegir Planeta:"))-1
+            else:
+                break    
+    else:   
+        print("No hay Planetas aca!")
+
+    return actual

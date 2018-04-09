@@ -1,5 +1,5 @@
 
-from lib import read_csv,poblar,elegir_galaxia,elegir_planeta 
+from lib import read_csv,poblar,elegir_galaxia,elegir_planeta,elegir_planeta_noconquistado 
 from misclases import Galaxia,Maestro,Aprendiz,Asesino
 
 
@@ -123,16 +123,66 @@ while True:
             print('\n')  
             if seleccion3 =='1':
                 print("- {} -".format(menu3['1']).center(80))
+                n=input("Nombre del nuevo planeta:")
+                print("\n")
+                print("Elegir Raza para {}".format(n).upper())
+                while True:
+                    menu3a = {}
+                    menu3a['1']="Maestro" 
+                    menu3a['2']="Aprendiz"
+                    menu3a['3']="Asesino"
+                    opciones3a=list(menu3a.keys())
+                    opciones3a.sort()
+                    for entry in opciones3a:
+                        print("     ({}) {}".format(entry, menu3a[entry]))
+                    seleccion3a=input("Seleccion:")
+                    print('\n')
+                    if seleccion3a =='1':
+                        galaxias[actual[0]].planetas.append(Maestro(n))
+                        break
+                    elif seleccion3a == '2':
+                        galaxias[actual[0]].planetas.append(Aprendiz(n))
+                        break
+                    elif seleccion3a == '3':
+                        galaxias[actual[0]].planetas.append(Asesino(n))
+                        break 
+                    else:
+                        print("No valido!")
+
+                print("Planeta Creado")
             elif seleccion3 == '2':
                 print("- {} -".format(menu3['2']).center(80))
+                #eliminar planeta
+
             elif seleccion3 == '3':
                 print("- {} -".format(menu3['3']).center(80))
+                actual=elegir_planeta_noconquistado(galaxias,actual)
+                n=int(input("Cuanto desea aumentar la tasa de minerales: "))
+                galaxias[actual[0]].planetas[actual[1]].aumentar(n,"mineral")
+                print("Listo!")
+                break
+                
             elif seleccion3 == '4':
                 print("- {} -".format(menu3['4']).center(80))
+                actual=elegir_planeta_noconquistado(galaxias,actual)
+                n=int(input("Cuanto desea aumentar la tasa de deuterio: "))
+                galaxias[actual[0]].planetas[actual[1]].aumentar(n,"deuterio")
+                print("Listo!")
+                break
             elif seleccion3 == '5':
                 print("- {} -".format(menu3['5']).center(80))
+                actual=elegir_planeta_noconquistado(galaxias,actual)
+                n=int(input("Cuandos soldados desea agregar: "))
+                galaxias[actual[0]].planetas[actual[1]].aumentar(n,"soldado")
+                print("Listo!")
+                break
             elif seleccion3 == '6':
                 print("- {} -".format(menu3['6']).center(80))
+                actual=elegir_planeta_noconquistado(galaxias,actual)
+                n=int(input("Cuandos magos desea agregar: "))
+                galaxias[actual[0]].planetas[actual[1]].aumentar(n,"magos")
+                print("Listo!")
+                break
             elif seleccion3 == '7': 
                 break
             else: 
@@ -180,7 +230,7 @@ while True:
 
             elif seleccion4 == '5': 
                 break
-                
+
             else: 
                 print("No valido!")
 

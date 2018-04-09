@@ -183,8 +183,11 @@ class Planeta:
 
     @magos.setter
     def magos(self,p):
-        if self.soldados + p <= self.poblacion_max:
-            self.__magos += p
+        if raza=="maestro":
+            if self.soldados + p <= self.poblacion_max:
+                self.__magos += p
+        else:
+            print("Hey! Tu raza no tiene magos!")
 
     def evolucion(self):
         total=self.nivel_economia+self.nivel_ataque
@@ -222,6 +225,19 @@ class Planeta:
         print("Nivel Evolucion:"+str(self.evolucion()))
         print("Tasa de Minerales: "+str(self.tasa_minerales))
         print("Tasa de deuterio: "+str(self.tasa_deuterio))
+
+    def aumentar(self,cuanto,quecosa):
+        if quecosa=="mineral":
+            self.tasa_minerales+=int(cuanto)
+        elif quecosa=="deuterio":
+            self.tasa_deuterio+=int(cuanto)
+        elif quecosa=="soldado":
+            self.soldados=int(cuanto)
+        elif quecosa=="mago":
+            self.magos=int(cuanto)
+
+
+
 
 class Maestro(Planeta):
     """docstring for Maestro"""
