@@ -51,6 +51,7 @@ class Galaxia:
             if tipo=="soldado":
                 if self.planetas[planeta_index].costo_soldado[0]*cantidad <= self.minerales and self.planetas[planeta_index].costo_soldado[1]*cantidad <= self.deuterio:
                     self.planetas[planeta_index].soldados += cantidad
+                    print("{} soldados creados".format(cantidad))
                 else:
                     print("Recursos insuficientes")
 

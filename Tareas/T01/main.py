@@ -161,7 +161,7 @@ while True:
                 galaxias[actual[0]].planetas[actual[1]].aumentar(n,"mineral")
                 print("Listo!")
                 break
-                
+
             elif seleccion3 == '4':
                 print("- {} -".format(menu3['4']).center(80))
                 actual=elegir_planeta_noconquistado(galaxias,actual)
@@ -247,45 +247,84 @@ while True:
         # usar actual[0]
         actual=elegir_planeta(galaxias,actual)
 
-        menu5 = {}
-        menu5['1']="Construir Edificio" 
-        menu5['2']="Generar Unidades"
-        menu5['3']="Recolectar Recursos"
-        menu5['4']="Realizar Mejoras"
-        menu5['5']="Volver"
+        if galaxias[actual[0]].planetas[actual[1]].conquistado:
+            menu5 = {}
+            menu5['1']="Construir Edificio" 
+            menu5['2']="Generar Unidades"
+            menu5['3']="Recolectar Recursos"
+            menu5['4']="Realizar Mejoras"
+            menu5['5']="Volver"
 
-        while True:
-            opciones5=list(menu5.keys())
-            opciones5.sort()
-            for entry in opciones5:
-                print("     ({}) {}".format(entry, menu5[entry]))
-            seleccion5=input("Seleccion:")
-            print('\n')  
-            if seleccion5 =='1':
-                print("- {} -".format(menu5['1']).center(80))
-                print(" (1) ")
-            elif seleccion5 == '2':
-                print("2")
-            elif seleccion5 == '3':
-                print("3")
-            elif seleccion5 == '4':
-                print("4")
-            elif seleccion5 == '5': 
-                break
-            else: 
-                print("No valido!") 
-        #visitar un planeta
-            #(conquistado)
-            #construir edificio
-            #generar unidades
-            #recolectar recursos
-            #realizar mejoras
-            
-            #(no conquistado)
-            #invadir planeta
-            #comprar el planeta
+            while True:
+                opciones5=list(menu5.keys())
+                opciones5.sort()
+                for entry in opciones5:
+                    print("     ({}) {}".format(entry, menu5[entry]))
+                seleccion5=input("Seleccion:")
+                print('\n')
 
-        
+                if seleccion5 =='1':
+                    print("- {} -".format(menu5['1']).center(80))
+                    print("Elegir edificio construir:")
+                    print("     (1) Cuartel")
+                    print("     (2) Torre de Defensa")
+                    n=int(input("Seleccion:"))
+                    if n==1:
+                        galaxias[actual[0]].contruir_cuartel(actual[1])
+                    elif n==2:
+                        galaxias[actual[0]].contruir_torre(actual[1])
+
+                elif seleccion5 == '2':
+                    print("- {} -".format(menu5['2']).center(80))
+                    n=int(input("Ingresar cantidad de soldados a crear:"))
+                    galaxia[actual[0]].generar_unidades(actual[1],
+                        n,"soldado"):
+
+                elif seleccion5 == '3':
+                    print("- {} -".format(menu5['3']).center(80))
+                    print("Recolectando Recursos...")
+                    galaxias[actual[0]].recolectar_recursos(actual[1])
+                    
+                elif seleccion5 == '4':
+                    print("- {} -".format(menu5['4']).center(80))
+
+                elif seleccion5 == '5': 
+                    break
+                else: 
+                    print("No valido!") 
+
+        else:
+            menu5 = {}
+            menu5['1']="Invadir Planeta" 
+            menu5['2']="Comprar Planeta"
+            menu5['3']="Volver"
+
+            while True:
+                opciones5=list(menu5.keys())
+                opciones5.sort()
+                for entry in opciones5:
+                    print("     ({}) {}".format(entry, menu5[entry]))
+                seleccion5=input("Seleccion:")
+                print('\n')  
+                if seleccion5 =='1':
+                    print("- {} -".format(menu5['1']).center(80))
+                    print(" (1) ")
+                elif seleccion5 == '2':
+                    print("2")
+                elif seleccion5 == '3':
+                    break
+                else: 
+                    print("No valido!") 
+            #visitar un planeta
+                #(conquistado)
+                #construir edificio
+                #generar unidades
+                #recolectar recursos
+                #realizar mejoras
+                
+                #(no conquistado)
+                #invadir planeta
+                #comprar el planeta
 
     elif seleccion == '6': 
         break
