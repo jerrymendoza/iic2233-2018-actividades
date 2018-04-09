@@ -258,6 +258,8 @@ while True:
         actual=elegir_planeta(galaxias,actual)
 
         if galaxias[actual[0]].planetas[actual[1]].conquistado:
+            print("Seccion de Planeta Conquistado")
+            print("\n")
             menu5 = {}
             menu5['1']="Construir Edificio" 
             menu5['2']="Generar Unidades"
@@ -305,6 +307,8 @@ while True:
                     print("No valido!") 
 
         else:
+            print("Seccion de Planeta No Conquistado")
+            print("\n")
             menu5 = {}
             menu5['1']="Invadir Planeta" 
             menu5['2']="Comprar Planeta"
