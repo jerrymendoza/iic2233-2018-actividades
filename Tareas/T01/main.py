@@ -7,13 +7,17 @@ from misclases import Galaxia,Maestro,Aprendiz,Asesino
 galaxias=[]
 actual=[None,None]
 #print(read_csv('planetas.csv','planeta'))
-
+cargado=False
 
 
 print("{} ChauCraft {}".format("*"*20,"*"*20).center(80))
 
 menu = {}
-menu['1']="Cargar Archivos csv" 
+if not cargado:
+    menu['1']="Cargar Archivos csv"
+else: 
+    menu['1']="Cargar Archivos csv (ya lo hiciste!)"
+
 menu['2']="Crear Galaxia"
 menu['3']="Modificar una Galaxia"
 menu['4']="Consultar sobre una Galaxia"
@@ -29,7 +33,10 @@ while True:
     print('\n') 
     if seleccion =='1': 
         print("- Cargar CSV -".center(80))
+        cargado=True
         poblar(galaxias)
+        print("CSV cargado")
+        print("\n")
 
     elif seleccion == '2': 
         print("- Crear Galaxia -".center(80))
@@ -221,12 +228,15 @@ while True:
                 galaxias[actual[0]].planetas[actual[1]].info_general()
 
             elif seleccion4 == '3':
-                print("3")
-
+                print("- {} -".format(menu4['3']).center(80))
+                print(" En mantencion, vuelva mas tarde ")
+                print("\n")
             elif seleccion4 == '4':
-                actual=elegir_galaxia(galaxias,actual)
+                print("- {} -".format(menu4['4']).center(80))
+                #actual=elegir_galaxia(galaxias,actual)
                 # usar actual[0]
-                print("4")
+                print(" En mantencion, vuelva mas tarde ")
+                print("\n")
 
             elif seleccion4 == '5': 
                 break
@@ -270,24 +280,25 @@ while True:
                     print("     (2) Torre de Defensa")
                     n=int(input("Seleccion:"))
                     if n==1:
-                        galaxias[actual[0]].contruir_cuartel(actual[1])
+                        galaxias[actual[0]].construir_cuartel(actual[1])
                     elif n==2:
-                        galaxias[actual[0]].contruir_torre(actual[1])
-
+                        galaxias[actual[0]].construir_torre(actual[1])
+                    else: 
+                        print("No valido!") 
                 elif seleccion5 == '2':
                     print("- {} -".format(menu5['2']).center(80))
                     n=int(input("Ingresar cantidad de soldados a crear:"))
-                    galaxia[actual[0]].generar_unidades(actual[1],
-                        n,"soldado"):
+                    galaxias[actual[0]].generar_unidades(actual[1],n,"soldado")
 
                 elif seleccion5 == '3':
                     print("- {} -".format(menu5['3']).center(80))
                     print("Recolectando Recursos...")
                     galaxias[actual[0]].recolectar_recursos(actual[1])
-                    
+
                 elif seleccion5 == '4':
                     print("- {} -".format(menu5['4']).center(80))
-
+                    print(" En mantencion, vuelva mas tarde ")
+                    print("\n")
                 elif seleccion5 == '5': 
                     break
                 else: 
@@ -308,9 +319,11 @@ while True:
                 print('\n')  
                 if seleccion5 =='1':
                     print("- {} -".format(menu5['1']).center(80))
-                    print(" (1) ")
+                    print(" En mantencion, vuelva mas tarde ")
+                    print("\n")
                 elif seleccion5 == '2':
-                    print("2")
+                    print(" En mantencion, vuelva mas tarde ")
+                    print("\n")
                 elif seleccion5 == '3':
                     break
                 else: 
