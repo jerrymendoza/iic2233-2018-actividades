@@ -57,7 +57,6 @@ def obtener_estadistica(estadistica, pokemon):
     :param pokemon: pokemon
     :return: int
     """
-
     return int(getattr(pokemon, estadistica))
 
 
@@ -74,7 +73,7 @@ def obtener_estadistica_promedio(estadistica, pokemones):
     total=len(list(pokemones1))
     mapeo = map(lambda x: obtener_estadistica(estadistica,x), pokemones2)
 
-    return reduce(lambda x,y: x + y, mapeo)/total
+    return reduce(lambda x, y: x + y, mapeo)/total
    
 
 
@@ -88,7 +87,9 @@ def pokemones_buena_estadistica(estadistica, pokemones):
     :param pokemones: iterable de pokemones
     :return: generador
     """
-    pass
+    pokemones1,pokemones2=tee(pokemones)
+    stat=obtener_estadistica_promedio(estadistica, pokemones2)
+    return (pokemon for pokemon in pokemones1 if obtener_estadistica(estadistica, pokemon) > stat)
 
 
 def pokemon_para_entrenador(entrenador, pokemones):
@@ -146,9 +147,13 @@ def poder_total_entrenador(entrenador, pokemones):
 #    pass
 
 pokemones=obtener_data('pokemondb.csv', 'Pokemon')
-#for i in pokedex_regional(1, pokemones):
-#    print(obtener_estadistica("vida",i))
-#    print(i)
+pokemones2=obtener_data('pokemondb.csv', 'Pokemon')
+pokemones3=obtener_data('pokemondb.csv', 'Pokemon')
+for i in pokemones:
+    print("Vida: {}".format(obtener_estadistica("vida",i)))
 
     
-print(obtener_estadistica_promedio("vida", pokemones))
+print("promedioooo : {}".format(obtener_estadistica_promedio("vida", pokemones2)))
+for i in pokemones_buena_estadistica("vida", pokemones3):
+    print("Vida: {}".format(obtener_estadistica("vida",i)))
+   
