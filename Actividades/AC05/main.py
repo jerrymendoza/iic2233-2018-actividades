@@ -70,12 +70,12 @@ def obtener_estadistica_promedio(estadistica, pokemones):
     :param pokemones: iterable de pokemones
     :return: float
     """
-    mapeo = map(lambda x: x.vida, pokemones)
-    print (', '.join(mapeo))
+    pokemones1,pokemones2=tee(pokemones)
+    total=len(list(pokemones1))
+    mapeo = map(lambda x: obtener_estadistica(estadistica,x), pokemones2)
 
-
-    ## no funca :(
-    pass
+    return reduce(lambda x,y: x + y, mapeo)/total
+   
 
 
 def pokemones_buena_estadistica(estadistica, pokemones):
