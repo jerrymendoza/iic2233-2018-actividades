@@ -70,8 +70,11 @@ def obtener_estadistica_promedio(estadistica, pokemones):
     :param pokemones: iterable de pokemones
     :return: float
     """
-   
+    mapeo = map(lambda x: x.vida, pokemones)
+    print (', '.join(mapeo))
 
+
+    ## no funca :(
     pass
 
 
@@ -143,9 +146,9 @@ def poder_total_entrenador(entrenador, pokemones):
 #    pass
 
 pokemones=obtener_data('pokemondb.csv', 'Pokemon')
-for i in pokedex_regional(1, pokemones):
-    print(obtener_estadistica("vida",i))
-    print(i)
+#for i in pokedex_regional(1, pokemones):
+#    print(obtener_estadistica("vida",i))
+#    print(i)
 
     
 print(obtener_estadistica_promedio("vida", pokemones))
