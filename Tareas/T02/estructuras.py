@@ -5,10 +5,12 @@ class NodoArbol:
         self.hijoIzquierdo = izquierdo
         self.hijoDerecho = derecho
         self.padre = padre
-        self.factorEquilibrio = 0 
+        self.factorEquilibrio = 0
 
+    #ocupado para pruebas
     def __repr__(self):
         return '[{}][{}]padre: {}, valor: {}'.format(self.clave,self.factorEquilibrio,self.padre, self.cargaUtil)
+
 
     def tieneHijoIzquierdo(self):
         return self.hijoIzquierdo
@@ -78,7 +80,12 @@ class ArbolBinarioBusqueda:
                    nodoActual.hijoDerecho = NodoArbol(clave,valor,padre=nodoActual)
 
     def __setitem__(self,c,v):
-        self.agregar(c,v)
+        if self.obtener(c) == None:
+            self.agregar(c,v)
+        else:
+            nodoAEditar = self._obtener(c,self.raiz)
+            nodoAEditar.cargaUtil=v
+            
 
     def obtener(self,clave):
        if self.raiz:
@@ -315,6 +322,32 @@ class ListaJ(ArbolAVL):
         for i in args:
             self.append(i)
 
+    def __repr__(self):
+        aux=0
+        salida=""
+        while aux<self.index:
+            if isinstance(self.__getitem__(aux), str):
+                salida+="'{}'".format(self.__getitem__(aux))
+            else:
+                salida+=str(self.__getitem__(aux))
+            aux+=1
+            if not aux==self.index:
+                salida+=","
+        return salida
+
+    def getRaiz(self):
+        return self.raiz
+
+    #probando probando
+    def inorden(self,elemento):
+        if elemento != None:
+            self.inorden(elemento.hijoIzquierdo)
+            if isinstance(elemento.cargaUtil, str):
+                print('"{}"'.format(elemento.cargaUtil))
+            else:
+                print(str(elemento.cargaUtil))
+            self.inorden(elemento.hijoDerecho)
+
 
     def append(self, value):
         self.__setitem__(self.index,value)
@@ -365,12 +398,15 @@ if __name__ == "__main__":
     miArbol3.append("yy que tal")
 
 
-    print(miArbol3)
+    #print(miArbol3)
     print("asdfsdsdf")
     print(miArbol3[0])
     print(miArbol3[4])
 
-    miArbol4=ListaJ(324,346,865443,"hola",987243)
+    miArbol4=ListaJ(324,346,865443,"hola",987243,True)
+    print("---------")
+    print("como lista:")
     print(miArbol4)
-    print(miArbol4[0])
-    print(miArbol4[4])
+    print("---------")
+    miArbol4[0]="cambie estooo"
+    print(miArbol4)
