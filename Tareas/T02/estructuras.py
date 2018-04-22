@@ -333,7 +333,7 @@ class ListaJ(ArbolAVL):
 
     def __repr__(self):
         aux=0
-        salida=""
+        salida="["
         while aux<self.index:
             if isinstance(self.__getitem__(aux), str):
                 salida+="'{}'".format(self.__getitem__(aux))
@@ -342,6 +342,7 @@ class ListaJ(ArbolAVL):
             aux+=1
             if not aux==self.index:
                 salida+=","
+        salida+="]"
         return salida
 
     def getRaiz(self):
@@ -358,6 +359,7 @@ class ListaJ(ArbolAVL):
     def append(self, value):
         self.__setitem__(self.index,value)
         self.index+=1
+
 
     def sort(self):
         pass
@@ -386,62 +388,111 @@ class ListaNoLinealJ(ArbolAVL):
     def getRaiz(self):
         return self.raiz
 
+class ListaNoLinealJ2(ListaNoLinealJ):
+    def __init__(self):
+        ListaNoLinealJ.__init__(self)
+
+    def inorden(self,elemento):
+        if elemento != None:
+            yield from self.inorden(elemento.hijoIzquierdo)
+            yield elemento
+            yield from self.inorden(elemento.hijoDerecho)        
+
+
+class Grafo:
+    def __init__(self):
+        self.lista =  ListaNoLinealJ2()
+        #lista[origen] = [[destino,peso],[destino2,peso2]...]
+
+    def _agregar_vertice(self,id):
+        if not self.lista[id]:
+            self.lista[id]=ListaJ()
+
+
+    def agregar_arista(self,origen_id,destino_id,peso):
+        self._agregar_vertice(origen_id)
+        self._agregar_vertice(destino_id)
+        if not self.existe_arista(origen_id,destino_id) and not self.existe_arista(destino_id,origen_id):
+            self.lista[origen_id].append(ListaJ(destino_id,peso))
+            self.lista[destino_id].append(ListaJ(origen_id,peso))
+
+    def existe_arista(self,origen_id,destino_id):
+        if not self.lista[origen_id]:
+            for destino in self.lista[origen_id]:
+                if destino[0]==destino_id:
+                    return True
+        return False
+
+    #probar
+    def imp(self):
+        for i in self.lista:
+            print(i.clave)
+            print(i.cargaUtil)
 
 
 if __name__ == "__main__":
 
-    miArbol = ArbolBinarioBusqueda()
-    miArbol["a"]="aa que tal"
+    #miArbol = ArbolBinarioBusqueda()
+    #miArbol["a"]="aa que tal"
 
-    miArbol["c"]="cc qu222 tal"
-    miArbol["b"]="bb que tal"
-    miArbol["z"]="zzz que tal"
-    miArbol["l"]="ll que tal"
-    miArbol["y"]="ll que tal"
-
-
-    print(miArbol)
-    print("asdfsdsdf")
-    print(miArbol["a"])
+    #miArbol["c"]="cc qu222 tal"
+    #miArbol["b"]="bb que tal"
+    #miArbol["z"]="zzz que tal"
+    #miArbol["l"]="ll que tal"
+    #miArbol["y"]="ll que tal"
 
 
-
-    miArbol2 = ArbolAVL()
-    miArbol2["a"]="aa que tal"
-
-    miArbol2["c"]="cc qu222 tal"
-    miArbol2["b"]="bb que tal"
-    miArbol2["z"]="zzz que tal"
-    miArbol2["l"]="ll que tal"
-    miArbol2["y"]="ll que tal"
+    #print(miArbol)
+    #print("asdfsdsdf")
+    #print(miArbol["a"])
 
 
-    print(miArbol2)
-    print("asdfsdsdf")
-    print(miArbol2["a"])
 
-    miArbol3 = ListaJ()
-    miArbol3.append("aa que tal")
-    miArbol3.append("cc qu222 tal")
-    miArbol3.append("bb que tall")
-    miArbol3.append("ll que tal")
-    miArbol3.append("yy que tal")
+    #miArbol2 = ArbolAVL()
+    #miArbol2["a"]="aa que tal"
+
+    #miArbol2["c"]="cc qu222 tal"
+    #miArbol2["b"]="bb que tal"
+    #miArbol2["z"]="zzz que tal"
+    #miArbol2["l"]="ll que tal"
+    #miArbol2["y"]="ll que tal"
+
+
+    #print(miArbol2)
+    #print("asdfsdsdf")
+    #print(miArbol2["a"])
+
+    #miArbol3 = ListaJ()
+    #miArbol3.append("aa que tal")
+    #miArbol3.append("cc qu222 tal")
+    #miArbol3.append("bb que tall")
+    #miArbol3.append("ll que tal")
+    #miArbol3.append("yy que tal")
 
 
     #print(miArbol3)
-    print("asdfsdsdf")
-    print(miArbol3[0])
-    print(miArbol3[4])
+    #print("asdfsdsdf")
+    #print(miArbol3[0])
+    #print(miArbol3[4])
 
-    miArbol4=ListaJ(324,346,865443,"hola",987243,True)
-    print("---------")
-    print("como lista:")
-    print(miArbol4)
-    print("---------")
-    miArbol4[0]="cambie estooo"
-    print(miArbol4)
-    print("---------")
-    print("---------")
-    print("---------")
-    for i in miArbol4:
-        print(i)
+    #miArbol4=ListaJ(324,346,865443,"hola",987243,True)
+    #print("---------")
+    #print("como lista:")
+    #print(miArbol4)
+    #print("---------")
+    #miArbol4[0]="cambie estooo"
+    #print(miArbol4)
+    #print("---------")
+    #print("---------")
+    #print("---------")
+    #for i in miArbol4:
+    #    print(i)
+
+
+    graf=Grafo()
+    #agregar_arista(origen,destino,peso)
+    graf.agregar_arista(1,2,31)
+    graf.agregar_arista(2,3,40)
+    graf.agregar_arista(3,8,69)
+
+    graf.imp()
