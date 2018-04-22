@@ -1,16 +1,23 @@
-from estructuras import ListaJ
+from estructuras import ListaJ,ArbolAVL,ListaNoLinealJ
 from misclases import Jugador
 def poblar(path):
-    lista = ListaJ()
+    dic = ListaNoLinealJ()  #diccionario en un arbolAVL
     with open(path,'r', encoding="UTF-8") as file:
         aux=False
         for linea in file:
             if aux:
-               lista.append(Jugador(*linea.strip().split(',')))
+                a=Jugador(*linea.strip().split(','))
+                dic[a.id]=a
             aux=True
-    return lista
+    return dic
 
 
-lista=poblar("players_db_chica.csv")
-for i in lista:
+dic=poblar("players_db_chica.csv")
+
+
+
+for i in dic:
     print(i)
+
+print("total:"+str(len(dic)))
+

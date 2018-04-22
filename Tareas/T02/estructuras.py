@@ -1,26 +1,4 @@
-class Iterable:
-    
-    def __init__(self, objeto):
-        self.objeto = objeto
-    
-    def __iter__(self):
-        return Iterador(self.objeto)
 
-class Iterador:
-    
-    def __init__(self, iterable):
-        self.iterable = iterable
-    
-    def __iter__(self): 
-        return self
-    
-    def __next__(self):
-        if self.iterable is None:
-            raise StopIteration("Llegamos al final")
-        else:           
-            valor = self.iterable
-            self.iterable = self.iterable.siguiente
-            return valor
 
 
 
@@ -336,6 +314,11 @@ class ArbolAVL(ArbolBinarioBusqueda):
              else:
                 self.rotarDerecha(nodo)
 
+        def inorden(self,elemento):
+            if elemento != None:
+                self.inorden(elemento.hijoIzquierdo)
+                yield elemento.cargaUtil
+                self.inorden(elemento.hijoDerecho)
 #Super listas
 class ListaJ(ArbolAVL):
     def __init__(self):
@@ -368,10 +351,7 @@ class ListaJ(ArbolAVL):
     def inorden(self,elemento):
         if elemento != None:
             self.inorden(elemento.hijoIzquierdo)
-            if isinstance(elemento.cargaUtil, str):
-                print('"{}"'.format(elemento.cargaUtil))
-            else:
-                print(str(elemento.cargaUtil))
+            yield elemento.cargaUtil
             self.inorden(elemento.hijoDerecho)
 
 
@@ -389,7 +369,24 @@ class ListaJ(ArbolAVL):
             yield nodo_actual
             aux+=1
             nodo_actual = self.__getitem__(aux)
-#           
+
+class ListaNoLinealJ(ArbolAVL):
+    def __init__(self):
+        ArbolAVL.__init__(self)
+
+    def inorden(self,elemento):
+        if elemento != None:
+            yield from self.inorden(elemento.hijoIzquierdo)
+            yield elemento.cargaUtil
+            yield from self.inorden(elemento.hijoDerecho)
+
+    def __iter__(self):
+        return self.inorden(self.raiz)
+         
+    def getRaiz(self):
+        return self.raiz
+
+
 
 if __name__ == "__main__":
 
