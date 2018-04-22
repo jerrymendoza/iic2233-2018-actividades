@@ -353,9 +353,9 @@ class ListaJ(ArbolAVL):
     #probando probando
     def inorden(self,elemento):
         if elemento != None:
-            self.inorden(elemento.hijoIzquierdo)
+            yield from self.inorden(elemento.hijoIzquierdo)
             yield elemento.cargaUtil
-            self.inorden(elemento.hijoDerecho)
+            yield from self.inorden(elemento.hijoDerecho)
 
     def existe_valor(self,valor):
         aux=0
@@ -376,12 +376,7 @@ class ListaJ(ArbolAVL):
         pass
 
     def __iter__(self):
-        aux=0
-        nodo_actual = self.__getitem__(aux)
-        while nodo_actual:
-            yield nodo_actual
-            aux+=1
-            nodo_actual = self.__getitem__(aux)
+        return self.inorden(self.raiz)
 
 class ListaNoLinealJ(ArbolAVL):
     def __init__(self):

@@ -1,4 +1,4 @@
-from estructuras import ListaNoLinealJ,ArbolAVL,ListaJ
+from estructuras import ListaNoLinealJ,ArbolAVL,ListaJ,Grafo
 from misclases import Jugador
 
 def leer(path):
@@ -20,6 +20,7 @@ def crear_grafo(jugadores):
     liga=ArbolAVL()
 
     for jugador in jugadores:
+    
         if jugador.nationality not in nacionalidad:
             nacionalidad[jugador.nationality]=ListaJ()
         if jugador.club not in club:
@@ -33,47 +34,52 @@ def crear_grafo(jugadores):
 
 
     #print("por nacionalidad:")
-    print(nacionalidad)
+    #print(nacionalidad)
     #print("por club:")
     #print(club)
     #print("por liga:")
     #print(liga)
     #print(nacionalidad["Chile"].existe_valor(184941))
+    graf=Grafo()
     for jugador in jugadores:
-        print("sadkfhñadkfshajfsdk")
-        print(jugador)
-        print(nacionalidad[jugador.nationality])
-        print("sadkfhñadkfshajfsdk")
         for id_jugador in nacionalidad[jugador.nationality]:
-
             if not id_jugador==jugador.id:
-                print("------------")
-                print(jugador.id)
-                print(jugador.club)
-                print(club[jugador.club])
-                print(id_jugador)
-                print("------------")
+                
                 if club[jugador.club].existe_valor(id_jugador):
                     #print("Amigos cercanos!! {} - {}".format(jugador.id,id_jugador))
                     #print(jugadores[jugador.id])
                     #print(jugadores[id_jugador])
-                    print("a")
+
+                    
+                    #agregar_arista(origen,destino,peso)
+                    graf.agregar_arista(jugador.id,id_jugador,1)
+
 
                 elif liga[jugador.league].existe_valor(id_jugador):
                     #print("Amigos lejanos!! {} - {}".format(jugador.id,id_jugador))
                     #print(jugadores[jugador.id])
                     #print(jugadores[id_jugador])
-                    print("b")
+                    graf.agregar_arista(jugador.id,id_jugador,0.95)
                 else: 
                     #print("parece que son conocidos {} - {}".format(jugador.id,id_jugador))
                     #print(jugadores[jugador.id])
                     #print(jugadores[id_jugador])
-                     print("c")
+                    graf.agregar_arista(jugador.id,id_jugador,0.9)
+        for id_jugador in club[jugador.club]:
+            if not id_jugador==jugador.id:
+                if (not nacionalidad[jugador.nationality].existe_valor(id_jugador) and 
+                    not liga[jugador.league].existe_valor(id_jugador)):
+                         graf.agregar_arista(jugador.id,id_jugador,0.9)
 
+        for id_jugador in liga[jugador.league]:
+            if not id_jugador==jugador.id:
+                if (not nacionalidad[jugador.nationality].existe_valor(id_jugador) and 
+                    not club[jugador.club].existe_valor(id_jugador)):
+                         graf.agregar_arista(jugador.id,id_jugador,0.9)
 
-
+    return graf
 
 if __name__ == "__main__":
     jugadores=leer("players_db_chica.csv")
-    crear_grafo(jugadores)
-
+    graf=crear_grafo(jugadores)
+    graf.imp()
