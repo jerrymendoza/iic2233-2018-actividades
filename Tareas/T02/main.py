@@ -12,8 +12,6 @@ for i in dic:
     print(i)
 
 for i in dic:
-    print(type(i))
-    print(type(dic))
     print(i.id)
 
 

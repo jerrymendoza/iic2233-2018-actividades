@@ -12,9 +12,10 @@ class NodoArbol:
         self.factorEquilibrio = 0
 
     #ocupado para pruebas
+    #def __repr__(self):
+    #    return '[{}][{}]padre: {}, valor: {}'.format(self.clave,self.factorEquilibrio,self.padre, self.cargaUtil)
     def __repr__(self):
-        return '[{}][{}]padre: {}, valor: {}'.format(self.clave,self.factorEquilibrio,self.padre, self.cargaUtil)
-
+        return '{}: {}'.format(self.clave,self.cargaUtil)
 
     def tieneHijoIzquierdo(self):
         return self.hijoIzquierdo
@@ -220,7 +221,8 @@ class ArbolBinarioBusqueda:
             ret = ''
 
             if nodo != None:
-                ret += '{0} -> {1}\n'.format(nodo, lado)
+                #ret += '{0} -> {1}\n'.format(nodo, lado)
+                ret += '{0}'.format(nodo)
                 ret += recorrer(nodo.hijoIzquierdo, 'i')
                 ret += recorrer(nodo.hijoDerecho, 'd')
 
@@ -355,6 +357,15 @@ class ListaJ(ArbolAVL):
             yield elemento.cargaUtil
             self.inorden(elemento.hijoDerecho)
 
+    def existe_valor(self,valor):
+        aux=0
+        nodo_actual = self[aux]
+        while not nodo_actual == None:
+            if nodo_actual==valor:
+                return True
+            aux+=1
+            nodo_actual = self[aux]
+        return False
 
     def append(self, value):
         self.__setitem__(self.index,value)
@@ -417,10 +428,11 @@ class Grafo:
             self.lista[destino_id].append(ListaJ(origen_id,peso))
 
     def existe_arista(self,origen_id,destino_id):
-        if not self.lista[origen_id]:
+        if not self.lista[origen_id]==None:
             for destino in self.lista[origen_id]:
                 if destino[0]==destino_id:
                     return True
+                    print("existeeeee")
         return False
 
     #probar
