@@ -1,3 +1,29 @@
+class Iterable:
+    
+    def __init__(self, objeto):
+        self.objeto = objeto
+    
+    def __iter__(self):
+        return Iterador(self.objeto)
+
+class Iterador:
+    
+    def __init__(self, iterable):
+        self.iterable = iterable
+    
+    def __iter__(self): 
+        return self
+    
+    def __next__(self):
+        if self.iterable is None:
+            raise StopIteration("Llegamos al final")
+        else:           
+            valor = self.iterable
+            self.iterable = self.iterable.siguiente
+            return valor
+
+
+
 class NodoArbol:
     def __init__(self,clave,valor,izquierdo=None,derecho=None,padre=None):
         self.clave = clave
@@ -310,7 +336,7 @@ class ArbolAVL(ArbolBinarioBusqueda):
              else:
                 self.rotarDerecha(nodo)
 
-
+#Super listas
 class ListaJ(ArbolAVL):
     def __init__(self):
         ArbolAVL.__init__(self)
@@ -356,7 +382,14 @@ class ListaJ(ArbolAVL):
     def sort(self):
         pass
 
-
+    def __iter__(self):
+        aux=0
+        nodo_actual = self.__getitem__(aux)
+        while nodo_actual:
+            yield nodo_actual
+            aux+=1
+            nodo_actual = self.__getitem__(aux)
+#           
 
 if __name__ == "__main__":
 
@@ -410,3 +443,8 @@ if __name__ == "__main__":
     print("---------")
     miArbol4[0]="cambie estooo"
     print(miArbol4)
+    print("---------")
+    print("---------")
+    print("---------")
+    for i in miArbol4:
+        print(i)
