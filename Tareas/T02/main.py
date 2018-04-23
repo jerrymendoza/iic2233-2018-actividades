@@ -15,4 +15,5 @@ print("total:"+str(len(jugadores)))
 graf=crear_grafo(jugadores)
 graf.imp()
 print("Jugador mas popular: ")
+
 print(jugadores[graf.mas_popular()])
