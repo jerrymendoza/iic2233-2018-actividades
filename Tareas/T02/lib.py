@@ -46,31 +46,16 @@ def crear_grafo(jugadores):
             if not id_jugador==jugador.id:
                 
                 if club[jugador.club].existe_valor(id_jugador):
-                    #print("Amigos cercanos!! {} - {}".format(jugador.id,id_jugador))
-                    #print(jugadores[jugador.id])
-                    #print(jugadores[id_jugador])
-
-                    
-                    #agregar_arista(origen,destino,peso)
                     graf.agregar_arista(jugador.id,id_jugador,1)
-
-
                 elif liga[jugador.league].existe_valor(id_jugador):
-                    #print("Amigos lejanos!! {} - {}".format(jugador.id,id_jugador))
-                    #print(jugadores[jugador.id])
-                    #print(jugadores[id_jugador])
                     graf.agregar_arista(jugador.id,id_jugador,0.95)
                 else: 
-                    #print("parece que son conocidos {} - {}".format(jugador.id,id_jugador))
-                    #print(jugadores[jugador.id])
-                    #print(jugadores[id_jugador])
                     graf.agregar_arista(jugador.id,id_jugador,0.9)
         for id_jugador in club[jugador.club]:
             if not id_jugador==jugador.id:
                 if (not nacionalidad[jugador.nationality].existe_valor(id_jugador) and 
                     not liga[jugador.league].existe_valor(id_jugador)):
                          graf.agregar_arista(jugador.id,id_jugador,0.9)
-
         for id_jugador in liga[jugador.league]:
             if not id_jugador==jugador.id:
                 if (not nacionalidad[jugador.nationality].existe_valor(id_jugador) and 

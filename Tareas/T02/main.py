@@ -1,19 +1,18 @@
 from estructuras import ListaJ,ArbolAVL,ListaNoLinealJ
 from misclases import Jugador
-from lib import leer
+from lib import leer,crear_grafo
 
 
 
-dic=leer("players_db_chica.csv")
+jugadores=leer("players_db_chica.csv")
 
 
 
-for i in dic:
-    print(i)
 
-for i in dic:
-    print(i.id)
+print("total:"+str(len(jugadores)))
 
 
-
-print("total:"+str(len(dic)))
+graf=crear_grafo(jugadores)
+graf.imp()
+print("Jugador mas popular: ")
+print(jugadores[graf.mas_popular()])

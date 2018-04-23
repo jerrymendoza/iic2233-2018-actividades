@@ -303,6 +303,7 @@ class ArbolAVL(ArbolBinarioBusqueda):
         nuevaRaiz.factorEquilibrio = nuevaRaiz.factorEquilibrio - 1 + max(rotRaiz.factorEquilibrio, 0)
 
     def reequilibrar(self,nodo):
+
         if nodo.factorEquilibrio < 0:
              if nodo.hijoDerecho.factorEquilibrio > 0:
                 self.rotarDerecha(nodo.hijoDerecho)
@@ -430,11 +431,24 @@ class Grafo:
                     print("existeeeee")
         return False
 
+
+    def mas_popular(self):
+        ide=0
+        largo=0
+        for i in self.lista:
+            if len(i.cargaUtil)>largo:
+                ide=i.clave
+                largo=len(i.cargaUtil)
+        return ide
+
+    
+
     #probar
     def imp(self):
         for i in self.lista:
             print(i.clave)
             print(i.cargaUtil)
+
 
 
 if __name__ == "__main__":
