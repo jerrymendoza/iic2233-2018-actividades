@@ -36,4 +36,6 @@ def invertir_string(funcion):
             stack.append(i)
         for i in stack:
             string+=stack.pop()
+        args=(string,args[0][1])
+        return args
     return decorada
