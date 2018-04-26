@@ -10,7 +10,7 @@ El módulo de Programazon cuenta con tres clases:
 import hashlib
 import random
 import time
-from decoradores import registrar,verificar_tipos
+from decoradores import registrar,verificar_tipos,invertir_string
 
 
 class TiendaFísica:
@@ -43,6 +43,7 @@ class TiendaOnline:
                 yield {nombre: int(precio)}
 
     @staticmethod
+    @invertir_string
     def _procesar(línea):
         return línea.rstrip('\n').split(';')
 
@@ -77,6 +78,7 @@ class Cliente:
         return self.carro
 
     @registrar
+    @verificar_tipos(TiendaOnline,str)
     def pagar(self, tienda, contraseña):
         if not self.carro:
             print("El carro está vacío.")

@@ -28,3 +28,12 @@ def verificar_tipos(*tipos):
         return decorada
     return verificar_tipos2
 
+def invertir_string(funcion):
+    def decorada(*args):
+        stack = []
+        string=""
+        for i in args[0]:
+            stack.append(i)
+        for i in stack:
+            string+=stack.pop()
+    return decorada
