@@ -58,6 +58,7 @@ class Cliente:
         self.carro = []
 
     @registrar
+    @verificar_tipos(int)
     def abonar(self, monto):
         self.saldo += monto
         self._mostrar_saldo()
