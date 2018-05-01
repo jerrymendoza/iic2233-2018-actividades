@@ -1,0 +1,7 @@
+gui/
+Database/
+MiniDatabase/
+consultas.json
+*.txt
+*.csv
+*.pdf
