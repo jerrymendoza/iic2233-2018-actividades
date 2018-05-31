@@ -16,6 +16,7 @@ def buscar_paths(path):
     return dic
 
 paths=buscar_paths(current)
+
 def funcion1(paths):
     base64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
     cadena=""
@@ -23,8 +24,10 @@ def funcion1(paths):
         a=f.read()
         for x in a:
             aux=chr(x)
-            aux4=bin(base64.index(aux))[2:].zfill(6)
-            cadena+=aux4
+            aux2=base64.index(aux)
+            aux3=bin(aux2)[2:]
+            aux4=aux3.zfill(6)
+            cadena+=str(aux4)
 
     de8en8 = [cadena[i:i+8] for i in range(0, len(cadena), 8)]
 
@@ -56,7 +59,7 @@ def final(paths):
     with open(paths['pep'], 'rb') as f:
         pep=f.read()
 
-    while True:
+    while pep:
         siguiente=next(fibo)
         if i % 2 == 0:
             salida = pep[:siguiente]
@@ -65,7 +68,7 @@ def final(paths):
         else:
            salida =png[:siguiente]
            png = png[siguiente:] 
-           total.extend(funcion1(salida))
+           total.extend(png)
 
         i += 1
     with open("resultado.png","wb") as f:
