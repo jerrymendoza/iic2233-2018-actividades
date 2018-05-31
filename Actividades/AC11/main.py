@@ -54,12 +54,11 @@ def final(paths):
     i=0
     total=bytearray()
     png = funcion1(paths)
-
     fibo=fib()
     with open(paths['pep'], 'rb') as f:
         pep=f.read()
 
-    while pep:
+    while pep or png:
         siguiente=next(fibo)
         if i % 2 == 0:
             salida = pep[:siguiente]
@@ -68,8 +67,7 @@ def final(paths):
         else:
            salida =png[:siguiente]
            png = png[siguiente:] 
-           total.extend(png)
-
+           total.extend(salida)
         i += 1
     with open("resultado.png","wb") as f:
         f.write(total)
