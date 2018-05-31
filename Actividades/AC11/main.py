@@ -61,14 +61,16 @@ def final(paths):
         if i % 2 == 0:
             salida = pep[:siguiente]
             pep = pep[siguiente:]
-            total.append(funcion2(salida))
+            total.extend(funcion2(salida))
         else:
            salida =png[:siguiente]
-           png =png[siguiente:] 
-           total.append(funcion1(salida))
+           png = png[siguiente:] 
+           total.extend(funcion1(salida))
 
         i += 1
-    print(total)           
+    with open("resultado.png","wb") as f:
+        f.write(total)
+         
         
 
 final(paths)
