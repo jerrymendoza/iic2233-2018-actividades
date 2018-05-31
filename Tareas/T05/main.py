@@ -18,41 +18,44 @@ from PyQt5.QtWidgets import (
     QGraphicsView
 )
 
-SCREEN_WIDTH            = 256
-SCREEN_HEIGHT           = 240
-PLAYER_SPEED            = 2   # pix/frame
-FRAME_TIME_MS           = 120  # ms/frame
+SCREEN_WIDTH            = 800
+SCREEN_HEIGHT           = 600
+PLAYER_SPEED            = 3   # pix/frame
+FRAME_TIME_MS           = 60  # ms/frame
 ASSETS = 'assets/'
 class Player(QGraphicsPixmapItem):
     def __init__(self, parent = None):
         QGraphicsPixmapItem.__init__(self,parent)
-        self.setPixmap(QPixmap(ASSETS+"1.png"))
-        self._down=deque(['2.png','3.png'])
-        self._up=deque(['',''])
-        self._right=deque(['4.png','5.png'])
+        self.setPixmap(QPixmap(ASSETS+"down1.png"))
+        self._down=deque(['down1.png','down2.png','down3.png'])
+        self._up=deque(['up1.png','up2.png','up3.png'])
+        self._right=deque(['right1.png','right2.png','right3.png'])
+        self._left=deque(['left1.png','left2.png','left3.png'])
 
     def game_update(self, keys_pressed):
         dx = 0
         dy = 0
         if Qt.Key_Left in keys_pressed:
+            self.setPixmap(QPixmap(ASSETS+self._left[0]))    
+            self._left.rotate(1)
             if self.x()>0:
                 dx -= PLAYER_SPEED
-
         if Qt.Key_Right in keys_pressed:
             self.setPixmap(QPixmap(ASSETS+self._right[0]))    
             self._right.rotate(1)
-            if self.x()<SCREEN_WIDTH-16:  
+            if self.x()<SCREEN_WIDTH-48:  
                 dx += PLAYER_SPEED
 
         if Qt.Key_Up in keys_pressed:
-            
+            self.setPixmap(QPixmap(ASSETS+self._up[0]))    
+            self._up.rotate(1)
             if self.y()>0:
                 dy -= PLAYER_SPEED
 
         if Qt.Key_Down in keys_pressed:
             self.setPixmap(QPixmap(ASSETS+self._down[0]))
             self._down.rotate(1)
-            if self.y()<SCREEN_HEIGHT-16:
+            if self.y()<SCREEN_HEIGHT-48:
                 dy += PLAYER_SPEED
 
         self.setPos(self.x()+dx, self.y()+dy)
@@ -79,6 +82,7 @@ class Scene(QGraphicsScene):
         self.addItem(self.player)
 
         self.view = QGraphicsView(self)
+ 
         self.view.show()
 
     def keyPressEvent(self, event):
