@@ -2,7 +2,8 @@ import sys
 from collections import deque
 from PyQt5.QtCore import (
     Qt,
-    QBasicTimer
+    QBasicTimer,
+    QUrl
 )
 from PyQt5.QtGui import (
     QBrush,
@@ -18,11 +19,20 @@ from PyQt5.QtWidgets import (
     QGraphicsView
 )
 
+from PyQt5.QtMultimedia import (
+    QMediaPlayer,
+    QMediaContent
+)
+
+
 SCREEN_WIDTH            = 800
 SCREEN_HEIGHT           = 600
-PLAYER_SPEED            = 3   # pix/frame
-FRAME_TIME_MS           = 60  # ms/frame
+PLAYER_SPEED            = 20   # pix/frame
+FRAME_TIME_MS           = 120  # ms/frame
 ASSETS = 'assets/'
+MUSIC = 'assets/sound/'
+
+
 class Player(QGraphicsPixmapItem):
     def __init__(self, parent = None):
         QGraphicsPixmapItem.__init__(self,parent)
@@ -58,7 +68,19 @@ class Player(QGraphicsPixmapItem):
             if self.y()<SCREEN_HEIGHT-48:
                 dy += PLAYER_SPEED
 
+
         self.setPos(self.x()+dx, self.y()+dy)
+
+class Bomba(QGraphicsPixmapItem):
+    def __init__(self, parent = None):
+        QGraphicsPixmapItem.__init__(self,parent)
+        self.setPixmap(QPixmap(ASSETS+"bomba1.png"))
+        self._img=deque(['bomba1.png','bomba2.png','bomba3.png'])
+
+    def game_update(self):
+        self.setPixmap(QPixmap(ASSETS+self._img[0]))
+        self._img.rotate(1)
+
 
 
 class Scene(QGraphicsScene):
@@ -79,14 +101,22 @@ class Scene(QGraphicsScene):
         self.player.setPos((SCREEN_WIDTH-self.player.pixmap().width())/2,
                            (SCREEN_HEIGHT-self.player.pixmap().height())/2)
 
-        self.addItem(self.player)
+        self.bomba = Bomba()
+        self.bomba.setPos((SCREEN_WIDTH-self.player.pixmap().width())/2,
+                           (SCREEN_HEIGHT-self.player.pixmap().height())/2)
 
+        self.musicabg = QMediaPlayer()
+        self.musicabg.setMedia(QMediaContent(QUrl(MUSIC+'03_StageTheme.mp3')))
+        self.musicabg.play()
+        self.addItem(self.player)
+        self.addItem(self.bomba)
         self.view = QGraphicsView(self)
- 
         self.view.show()
+
 
     def keyPressEvent(self, event):
         self.keys_pressed.add(event.key())
+
 
     def keyReleaseEvent(self, event):
         self.keys_pressed.remove(event.key())
@@ -97,6 +127,7 @@ class Scene(QGraphicsScene):
 
     def game_update(self):
         self.player.game_update(self.keys_pressed)
+        self.bomba.game_update()
 
 
 if __name__ == '__main__':
