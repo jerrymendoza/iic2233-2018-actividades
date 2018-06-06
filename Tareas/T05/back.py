@@ -10,6 +10,7 @@ class Personaje():
 	def __init__(self):
 		self.posicion=(0,0)
 		self._vidas=3
+		self._bombas = 1
 
 
 

@@ -3,7 +3,8 @@ from collections import deque
 from PyQt5.QtCore import (
     Qt,
     QBasicTimer,
-    QUrl
+    QUrl,
+    QTimer
 )
 from PyQt5.QtGui import (
     QBrush,
@@ -68,6 +69,12 @@ class Player(QGraphicsPixmapItem):
             if self.y()<SCREEN_HEIGHT-48:
                 dy += PLAYER_SPEED
 
+        if Qt.Key_Space in keys_pressed:
+            self.bomba = Bomba()
+            self.bomba.setPos(self.x(),self.y())
+            self.scene().addItem(self.bomba)
+        
+       
 
         self.setPos(self.x()+dx, self.y()+dy)
 
@@ -76,7 +83,7 @@ class Bomba(QGraphicsPixmapItem):
         QGraphicsPixmapItem.__init__(self,parent)
         self.setPixmap(QPixmap(ASSETS+"bomba1.png"))
         self._img=deque(['bomba1.png','bomba2.png','bomba3.png'])
-
+        
     def game_update(self):
         self.setPixmap(QPixmap(ASSETS+self._img[0]))
         self._img.rotate(1)
@@ -101,15 +108,13 @@ class Scene(QGraphicsScene):
         self.player.setPos((SCREEN_WIDTH-self.player.pixmap().width())/2,
                            (SCREEN_HEIGHT-self.player.pixmap().height())/2)
 
-        self.bomba = Bomba()
-        self.bomba.setPos((SCREEN_WIDTH-self.player.pixmap().width())/2,
-                           (SCREEN_HEIGHT-self.player.pixmap().height())/2)
+        
 
         self.musicabg = QMediaPlayer()
         self.musicabg.setMedia(QMediaContent(QUrl(MUSIC+'03_StageTheme.mp3')))
         self.musicabg.play()
         self.addItem(self.player)
-        self.addItem(self.bomba)
+        
         self.view = QGraphicsView(self)
         self.view.show()
 
@@ -117,9 +122,20 @@ class Scene(QGraphicsScene):
     def keyPressEvent(self, event):
         self.keys_pressed.add(event.key())
 
+        if Qt.Key_Control in self.keys_pressed and Qt.Key_P in self.keys_pressed:
+            if not self.timer.isActive():
+                self.timer.start(FRAME_TIME_MS,self)
+                self.musicabg.play()
+
+            else:
+                self.timer.stop()
+                self.musicabg.pause()
+
+
 
     def keyReleaseEvent(self, event):
         self.keys_pressed.remove(event.key())
+
 
     def timerEvent(self, event):
         self.game_update()
@@ -127,7 +143,12 @@ class Scene(QGraphicsScene):
 
     def game_update(self):
         self.player.game_update(self.keys_pressed)
-        self.bomba.game_update()
+
+        for item in self.items():
+            if type(item).__name__ == 'Bomba':
+                item.game_update()
+
+
 
 
 if __name__ == '__main__':
