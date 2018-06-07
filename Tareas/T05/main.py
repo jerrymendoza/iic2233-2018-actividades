@@ -12,6 +12,7 @@ from PyQt5.QtGui import (
     QColor
 )
 from PyQt5.QtWidgets import (
+    QWidget,
     QApplication,
     QGraphicsItem,
     QGraphicsPixmapItem,
@@ -93,7 +94,7 @@ class Bomba(QGraphicsPixmapItem):
 class Scene(QGraphicsScene):
     def __init__(self, parent = None):
         QGraphicsScene.__init__(self, parent)
-
+        
         self.keys_pressed = set()
 
         self.timer = QBasicTimer()
@@ -148,10 +149,38 @@ class Scene(QGraphicsScene):
             if type(item).__name__ == 'Bomba':
                 item.game_update()
 
+class Game(QGraphicsView):
+    def __init__(self,parent = None):
+        QGraphicsView.__init__(self, parent)
+        self.setFixedSize(SCREEN_WIDTH,SCREEN_HEIGHT )
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setBackgroundBrush(QBrush(Qt.black, Qt.SolidPattern));
+        scene = QGraphicsScene()
+        scene.setSceneRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT )
+        
+
+        #musica
+        self.musicahome = QMediaPlayer()
+        self.musicahome.setMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
+        self.musicahome.play()
+
+        #logo
+        logo = QGraphicsPixmapItem()
+        logo.setPixmap(QPixmap(ASSETS+"codewithfire2.jpg"))
+        logo.setPos(SCREEN_WIDTH/2-logo.pixmap().width()/2,30)
+        scene.addItem(logo)
+
+        self.setScene(scene)
+        
+
+
 
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    scene = Scene()
+    #scene = Scene()
+    game = Game()
+    game.show()
     sys.exit(app.exec_())
