@@ -10,7 +10,9 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import (
     QBrush,
     QPixmap,
-    QColor
+    QColor,
+    QFont,
+    QFontDatabase
 )
 from PyQt5.QtWidgets import (
     QWidget,
@@ -161,6 +163,8 @@ class Game(QGraphicsView):
         self.setBackgroundBrush(QBrush(Qt.black, Qt.SolidPattern));
         scene = QGraphicsScene()
         scene.setSceneRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
+
+        QFontDatabase.addApplicationFont(ASSETS+'emulogic.ttf')
         
         self.playlist = QMediaPlaylist()
         self.playlist.addMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
@@ -183,8 +187,18 @@ class Game(QGraphicsView):
 
         #menu
         boton = Boton("Jugar")
-        boton.setPos(400,300)
+        boton.setPos(SCREEN_WIDTH/2-boton.rect().width()/2,380)
         scene.addItem(boton)
+
+        boton2 = Boton("Ranking")
+        boton2.setPos(SCREEN_WIDTH/2-boton2.rect().width()/2,430)
+        scene.addItem(boton2)
+
+        boton3 = Boton("Salir")
+        boton3.setPos(SCREEN_WIDTH/2-boton3.rect().width()/2,480)
+        scene.addItem(boton3)
+
+
         self.setScene(scene)
 
     def displayMenu(self):
@@ -198,12 +212,15 @@ class Boton(QGraphicsRectItem):
         self.setRect(0,0,200,50)
         self.setBrush(QBrush(Qt.black, Qt.SolidPattern))
 
+        
+
         texto = QGraphicsTextItem(nombre,self)
         texto.setDefaultTextColor(Qt.white)
+        texto.setFont(QFont('emulogic'))
         x = self.rect().width()/2 - texto.boundingRect().width()/2
         y = self.rect().height()/2 - texto.boundingRect().height()/2
         texto.setPos(x,y)
-
+        
 
 
 
