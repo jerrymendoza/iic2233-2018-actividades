@@ -4,7 +4,8 @@ from PyQt5.QtCore import (
     Qt,
     QBasicTimer,
     QUrl,
-    QTimer
+    QTimer,
+
 )
 from PyQt5.QtGui import (
     QBrush,
@@ -18,11 +19,13 @@ from PyQt5.QtWidgets import (
     QGraphicsPixmapItem,
     QGraphicsRectItem,
     QGraphicsScene,
-    QGraphicsView
+    QGraphicsView,
+    QGraphicsTextItem
 )
 
 from PyQt5.QtMultimedia import (
     QMediaPlayer,
+    QMediaPlaylist,
     QMediaContent
 )
 
@@ -157,23 +160,61 @@ class Game(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setBackgroundBrush(QBrush(Qt.black, Qt.SolidPattern));
         scene = QGraphicsScene()
-        scene.setSceneRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT )
+        scene.setSceneRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
         
+        self.playlist = QMediaPlaylist()
+        self.playlist.addMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
+        self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
+
+        self.musica = QMediaPlayer()
+        self.musica.setPlaylist(self.playlist)
+        self.musica.play()
 
         #musica
-        self.musicahome = QMediaPlayer()
-        self.musicahome.setMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
-        self.musicahome.play()
+        #self.musicahome = QMediaPlayer()
+        #self.musicahome.setMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
+        #self.musicahome.play()
 
         #logo
         logo = QGraphicsPixmapItem()
         logo.setPixmap(QPixmap(ASSETS+"codewithfire2.jpg"))
-        logo.setPos(SCREEN_WIDTH/2-logo.pixmap().width()/2,30)
+        logo.setPos(SCREEN_WIDTH/2-logo.pixmap().width()/2,40)
         scene.addItem(logo)
 
+        #menu
+        boton = Boton("Jugar")
+        boton.setPos(400,300)
+        scene.addItem(boton)
         self.setScene(scene)
+
+    def displayMenu(self):
+
+        pass 
         
 
+class Boton(QGraphicsRectItem):
+    def __init__(self,nombre,parent = None):
+        QGraphicsRectItem.__init__(self, parent)
+        self.setRect(0,0,200,50)
+        self.setBrush(QBrush(Qt.black, Qt.SolidPattern))
+
+        texto = QGraphicsTextItem(nombre,self)
+        texto.setDefaultTextColor(Qt.white)
+        x = self.rect().width()/2 - texto.boundingRect().width()/2
+        y = self.rect().height()/2 - texto.boundingRect().height()/2
+        texto.setPos(x,y)
+
+
+
+
+
+        self.setAcceptHoverEvents(True)
+
+
+    def mousePressEvent(self, event):
+        #emit clic
+        pass
+    
 
 
 
