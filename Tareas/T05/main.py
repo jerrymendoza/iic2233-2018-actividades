@@ -227,7 +227,20 @@ class Game(QGraphicsView):
         
     def start_stage(self):
         self.scene.clear()
-        print("No me quiero ir señor programador")
+        text = "STAGE 1" #agregar numero
+        stage_texto = QGraphicsTextItem(text)
+        stage_texto.setFont(QFont("emulogic",12))
+        stage_texto.setDefaultTextColor(Qt.white)
+        xt=self.width()/2-stage_texto.boundingRect().width()/2
+        yt=self.height()/2-stage_texto.boundingRect().height()/2
+        stage_texto.setPos(xt,yt)
+        self.scene.addItem(stage_texto)
+
+        self.musicahome.stop()
+        self.musicastage = QMediaPlayer()
+        self.musicastage.setMedia(QMediaContent(QUrl(MUSIC+'02_StageStart.mp3')))
+        self.musicastage.play()
+
 
 
     def close(self):
