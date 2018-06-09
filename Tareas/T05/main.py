@@ -139,6 +139,9 @@ class Scene(QGraphicsScene):
                 self.timer.stop()
                 self.musicabg.pause()
 
+        if Qt.Key_Control in self.keys_pressed and Qt.Key_E in self.keys_pressed:
+            app.exit()
+
 
 
     def keyReleaseEvent(self, event):
@@ -199,8 +202,9 @@ class Game(QGraphicsView):
         self.scene.addItem(boton)
 
 
-        boton2 = Boton("Ranking")
+        boton2 = Boton("Top 10")
         boton2.setPos(SCREEN_WIDTH/2-boton2.rect().width()/2,420)
+        boton2.s.escribe_signal.connect(self.top10)
         self.scene.addItem(boton2)
 
         boton3 = Boton("Salir")
@@ -241,7 +245,38 @@ class Game(QGraphicsView):
         self.musicastage.setMedia(QMediaContent(QUrl(MUSIC+'02_StageStart.mp3')))
         self.musicastage.play()
 
+    def top10(self,lista=[]):
 
+        lista=[("Jerry",300),("Jerry",38700),("Jerry",38700),("Jerry",38700),
+        ("Jerry",38700),("Jerry",38700),("Jerry",38700),("Jerry",38700),
+        ("Jerry",38700),("Jerry",38700)]
+
+        self.scene.clear()
+        titulo = "TOP 10"
+        top10_titulo = QGraphicsTextItem(titulo)
+        top10_titulo.setFont(QFont("emulogic",12))
+        top10_titulo.setDefaultTextColor(Qt.white)
+        xt=self.width()/2-top10_titulo.boundingRect().width()/2
+        #yt=self.height()/2-stage_texto.boundingRect().height()/2
+        yt=50
+        top10_titulo.setPos(xt,yt)
+        self.scene.addItem(top10_titulo)
+        yt+=10
+        
+        for item in lista:
+            yt+=44
+            nombre = QGraphicsTextItem(item[0])
+            nombre.setFont(QFont("emulogic",12))
+            nombre.setDefaultTextColor(Qt.white)
+            score = QGraphicsTextItem(str(item[1]))
+            score.setFont(QFont("emulogic",12))
+            score.setDefaultTextColor(Qt.white)
+
+            nombre.setPos(150,yt)
+            score.setPos(550,yt)
+
+            self.scene.addItem(nombre)
+            self.scene.addItem(score)
 
     def close(self):
         app.exit()
