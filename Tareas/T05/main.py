@@ -5,6 +5,8 @@ from PyQt5.QtCore import (
     QBasicTimer,
     QUrl,
     QTimer,
+    pyqtSignal,
+    QObject
 
 )
 from PyQt5.QtGui import (
@@ -22,7 +24,7 @@ from PyQt5.QtWidgets import (
     QGraphicsRectItem,
     QGraphicsScene,
     QGraphicsView,
-    QGraphicsTextItem
+    QGraphicsTextItem,
 )
 
 from PyQt5.QtMultimedia import (
@@ -157,66 +159,94 @@ class Scene(QGraphicsScene):
 class Game(QGraphicsView):
     def __init__(self,parent = None):
         QGraphicsView.__init__(self, parent)
+
         self.setFixedSize(SCREEN_WIDTH,SCREEN_HEIGHT )
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
         self.setBackgroundBrush(QBrush(Qt.black, Qt.SolidPattern));
-        scene = QGraphicsScene()
-        scene.setSceneRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
+
+        self.scene = QGraphicsScene()
+        self.scene.setSceneRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
 
         QFontDatabase.addApplicationFont(ASSETS+'emulogic.ttf')
         
-        self.playlist = QMediaPlaylist()
-        self.playlist.addMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
-        self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
 
-        self.musica = QMediaPlayer()
-        self.musica.setPlaylist(self.playlist)
-        self.musica.play()
+        #musica que se repite
+        #self.playlist = QMediaPlaylist()
+        #self.playlist.addMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
+        #self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
+
+        #self.musica = QMediaPlayer()
+        #self.musica.setPlaylist(self.playlist)
+        #self.musica.play()
 
         #musica
-        #self.musicahome = QMediaPlayer()
-        #self.musicahome.setMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
-        #self.musicahome.play()
+        self.musicahome = QMediaPlayer()
+        self.musicahome.setMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
+        self.musicahome.play()
 
         #logo
         logo = QGraphicsPixmapItem()
         logo.setPixmap(QPixmap(ASSETS+"codewithfire2.jpg"))
         logo.setPos(SCREEN_WIDTH/2-logo.pixmap().width()/2,40)
-        scene.addItem(logo)
+        self.scene.addItem(logo)
 
         #menu
         boton = Boton("Jugar")
         boton.setPos(SCREEN_WIDTH/2-boton.rect().width()/2,380)
-        scene.addItem(boton)
+        boton.s.escribe_signal.connect(self.start_stage)
+        self.scene.addItem(boton)
+
 
         boton2 = Boton("Ranking")
-        boton2.setPos(SCREEN_WIDTH/2-boton2.rect().width()/2,430)
-        scene.addItem(boton2)
+        boton2.setPos(SCREEN_WIDTH/2-boton2.rect().width()/2,420)
+        self.scene.addItem(boton2)
 
         boton3 = Boton("Salir")
-        boton3.setPos(SCREEN_WIDTH/2-boton3.rect().width()/2,480)
-        scene.addItem(boton3)
+        boton3.setPos(SCREEN_WIDTH/2-boton3.rect().width()/2,460)
+        boton3.s.escribe_signal.connect(self.close)
+        self.scene.addItem(boton3)
 
 
-        self.setScene(scene)
+        texto_pie = QGraphicsTextItem("Jerry Mendoza - IIC2233")
+        textofont= QFont("emulogic",12)
+        texto_pie.setFont(textofont)
+        texto_pie.setDefaultTextColor(Qt.white)
+        xt=self.width()/2-texto_pie.boundingRect().width()/2
+
+        texto_pie.setPos(xt,520)
+        self.scene.addItem(texto_pie)
+
+
+        self.setScene(self.scene)
 
     def displayMenu(self):
-
+        print("blabla")
         pass 
         
+    def start_stage(self):
+        self.scene.clear()
+        print("No me quiero ir señor programador")
+
+
+    def close(self):
+        app.exit()
 
 class Boton(QGraphicsRectItem):
     def __init__(self,nombre,parent = None):
         QGraphicsRectItem.__init__(self, parent)
-        self.setRect(0,0,200,50)
+    
+        self.s = MiSignal()
+
+        self.setRect(0,0,200,40)
         self.setBrush(QBrush(Qt.black, Qt.SolidPattern))
 
         
 
         texto = QGraphicsTextItem(nombre,self)
         texto.setDefaultTextColor(Qt.white)
-        texto.setFont(QFont('emulogic'))
+        texto.setFont(QFont('emulogic',15))
         x = self.rect().width()/2 - texto.boundingRect().width()/2
         y = self.rect().height()/2 - texto.boundingRect().height()/2
         texto.setPos(x,y)
@@ -227,12 +257,17 @@ class Boton(QGraphicsRectItem):
 
         self.setAcceptHoverEvents(True)
 
-
     def mousePressEvent(self, event):
-        #emit clic
-        pass
-    
+        self.s.escribe_signal.emit()
 
+        
+    
+class MiSignal(QObject):
+    """
+    Esta clase contiene las señales que permiten la comunicación entre
+    elementos de la GUI.
+    """
+    escribe_signal = pyqtSignal()
 
 
 
