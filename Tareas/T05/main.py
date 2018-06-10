@@ -1,4 +1,5 @@
 import sys
+import time
 from collections import deque
 from PyQt5.QtCore import (
     Qt,
@@ -124,7 +125,7 @@ class Scene(QGraphicsScene):
         self.addItem(self.player)
         
         self.view = QGraphicsView(self)
-        self.view.show()
+        #self.view.show()
 
 
     def keyPressEvent(self, event):
@@ -245,6 +246,12 @@ class Game(QGraphicsView):
         self.musicastage.setMedia(QMediaContent(QUrl(MUSIC+'02_StageStart.mp3')))
         self.musicastage.play()
 
+        self.timer2 = QTimer()
+        self.timer2.timeout.connect(self.start_game)
+        self.timer2.setSingleShot(True) 
+        self.timer2.start(3500)
+        
+
     def top10(self,lista=[]):
 
         lista=[("Jerry",300),("Jerry",38700),("Jerry",38700),("Jerry",38700),
@@ -278,8 +285,15 @@ class Game(QGraphicsView):
             self.scene.addItem(nombre)
             self.scene.addItem(score)
 
+    def start_game(self):
+        self.scene.clear()
+        self.setScene(Scene())
+       
+
     def close(self):
         app.exit()
+
+
 
 class Boton(QGraphicsRectItem):
     def __init__(self,nombre,parent = None):
