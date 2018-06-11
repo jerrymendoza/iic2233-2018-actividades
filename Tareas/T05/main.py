@@ -1,3 +1,4 @@
+import back
 import sys
 import time
 from collections import deque
@@ -34,15 +35,17 @@ from PyQt5.QtMultimedia import (
     QMediaContent
 )
 
-
-SCREEN_WIDTH            = 800
-SCREEN_HEIGHT           = 600
-PLAYER_SPEED            = 20   # pix/frame
+PUNTAJE_TIEMPO = 1
+PATH = "mapa.txt"
+SCREEN_WIDTH            = 1000
+SCREEN_HEIGHT           = 800
+PLAYER_SPEED            = 12  # pix/frame
 FRAME_TIME_MS           = 120  # ms/frame
 ASSETS = 'assets/'
 MUSIC = 'assets/sound/'
+N = 48 #pixeles,no modificar
 
-
+MUSICA = False
 class Player(QGraphicsPixmapItem):
     def __init__(self, parent = None):
         QGraphicsPixmapItem.__init__(self,parent)
@@ -52,35 +55,61 @@ class Player(QGraphicsPixmapItem):
         self._right=deque(['right1.png','right2.png','right3.png'])
         self._left=deque(['left1.png','left2.png','left3.png'])
 
-    def game_update(self, keys_pressed):
+    def game_update(self, keys_pressed,mapa):
         dx = 0
         dy = 0
         if Qt.Key_Left in keys_pressed:
             self.setPixmap(QPixmap(ASSETS+self._left[0]))    
             self._left.rotate(1)
-            if self.x()>0:
+            #if self.x()>0:
+            #    dx -= PLAYER_SPEED
+            destino = (self.x()-PLAYER_SPEED,self.y())
+
+            if mapa.mov_valido(destino):
                 dx -= PLAYER_SPEED
+            else: 
+                print(self.x(),self.y())
+                print(self.x()-PLAYER_SPEED)
+
+
         if Qt.Key_Right in keys_pressed:
             self.setPixmap(QPixmap(ASSETS+self._right[0]))    
             self._right.rotate(1)
-            if self.x()<SCREEN_WIDTH-48:  
+
+            #if self.x()<SCREEN_WIDTH-48:
+            destino = (self.x()+PLAYER_SPEED,self.y())
+            if mapa.mov_valido(destino):  
                 dx += PLAYER_SPEED
+            else: 
+                print(self.x(),self.y())
+                print(self.x()+PLAYER_SPEED)
 
         if Qt.Key_Up in keys_pressed:
             self.setPixmap(QPixmap(ASSETS+self._up[0]))    
             self._up.rotate(1)
-            if self.y()>0:
+            #if self.y()>0:
+            destino = (self.x(),self.y()-PLAYER_SPEED)
+            if mapa.mov_valido(destino) : 
                 dy -= PLAYER_SPEED
+            else: 
+                print(self.x(),self.y())
+                print(self.y()-PLAYER_SPEED)
 
         if Qt.Key_Down in keys_pressed:
             self.setPixmap(QPixmap(ASSETS+self._down[0]))
             self._down.rotate(1)
-            if self.y()<SCREEN_HEIGHT-48:
+            #if self.y()<SCREEN_HEIGHT-48:
+            destino = (self.x(),self.y()+PLAYER_SPEED)
+            if mapa.mov_valido(destino):  
                 dy += PLAYER_SPEED
+            else: 
+                print(self.x(),self.y())
+                print(self.y()+PLAYER_SPEED)
 
         if Qt.Key_Space in keys_pressed:
             self.bomba = Bomba()
             self.bomba.setPos(self.x(),self.y())
+            mapa.bombas.append((self.x()//N,self.y()//N))
             self.scene().addItem(self.bomba)
         
        
@@ -99,14 +128,41 @@ class Bomba(QGraphicsPixmapItem):
 
 
 
+
+class Muralla(QGraphicsPixmapItem):
+    def __init__(self, parent = None):
+        QGraphicsPixmapItem.__init__(self,parent)
+        self.setPixmap(QPixmap(ASSETS+"indestructible.png"))
+        
+    def game_update(self):
+        pass
+
+class Destructible(QGraphicsPixmapItem):
+    def __init__(self, parent = None):
+        QGraphicsPixmapItem.__init__(self,parent)
+        self.setPixmap(QPixmap(ASSETS+"destructible1.png"))
+        
+    def game_update(self):
+        pass
+
+
+
+
 class Scene(QGraphicsScene):
     def __init__(self, parent = None):
         QGraphicsScene.__init__(self, parent)
-        
+        self.inicio = 0
         self.keys_pressed = set()
 
         self.timer = QBasicTimer()
         self.timer.start(FRAME_TIME_MS, self)
+        self.time = QTimer()
+        self.time.start(1000)
+
+        
+
+
+        self.time.timeout.connect(self.contar)
 
         bg = QGraphicsRectItem()
         bg.setRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
@@ -114,24 +170,68 @@ class Scene(QGraphicsScene):
         self.addItem(bg)
 
         self.player = Player()
-        self.player.setPos((SCREEN_WIDTH-self.player.pixmap().width())/2,
-                           (SCREEN_HEIGHT-self.player.pixmap().height())/2)
+        #self.player.setPos((SCREEN_WIDTH-self.player.pixmap().width())/2,
+        #                   (SCREEN_HEIGHT-self.player.pixmap().height())/2)
+        self.player.setPos(800,48)
+        #musica que se repite
 
-        
+        self.playlist = QMediaPlaylist()
+        self.playlist.addMedia(QMediaContent(QUrl(MUSIC+'03_StageTheme.mp3')))
+        self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
 
         self.musicabg = QMediaPlayer()
-        self.musicabg.setMedia(QMediaContent(QUrl(MUSIC+'03_StageTheme.mp3')))
+        self.musicabg.setPlaylist(self.playlist)
         self.musicabg.play()
+        self.musicabg.stop()
+
+        #self.musicabg = QMediaPlayer()
+        #self.musicabg.setMedia(QMediaContent(QUrl(MUSIC+'03_StageTheme.mp3')))
+        #self.musicabg.play()
         self.addItem(self.player)
         
+        self.mapa = back.Mapa(PATH)
+        self.dibujar(self.mapa)
+
+
+        self.tiempo = QGraphicsTextItem("{}:{}:{}".format(0,0,self.inicio))
+        textofont= QFont("emulogic",12)
+        self.tiempo.setFont(textofont)
+        self.tiempo.setDefaultTextColor(Qt.white)
+
+        self.tiempo.setPos(750,520)
+        self.addItem(self.tiempo)
+
         self.view = QGraphicsView(self)
         #self.view.show()
+
+    def contar(self):
+        self.inicio+=1
+        self.removeItem(self.tiempo)
+        self.tiempo = QGraphicsTextItem("{}:{}:{}".format(0,0,self.inicio))
+        textofont= QFont("emulogic",12)
+        self.tiempo.setFont(textofont)
+        self.tiempo.setDefaultTextColor(Qt.white)
+        self.tiempo.setPos(750,520)
+        self.addItem(self.tiempo)
+
+
+    def dibujar(self,mapa):
+        for indestruc in self.mapa.indestructibles:
+            self.muralla = Muralla()
+            self.muralla.setPos(indestruc[0]*N,indestruc[1]*N)
+            self.addItem(self.muralla)
+
+        for destruc in self.mapa.destructibles:
+            self.destructible = Destructible()
+            self.destructible.setPos(destruc[0]*N,destruc[1]*N)
+            self.addItem(self.destructible)
 
 
     def keyPressEvent(self, event):
         self.keys_pressed.add(event.key())
 
-        if Qt.Key_Control in self.keys_pressed and Qt.Key_P in self.keys_pressed:
+        if (Qt.Key_Control in self.keys_pressed
+            and Qt.Key_P in self.keys_pressed):
             if not self.timer.isActive():
                 self.timer.start(FRAME_TIME_MS,self)
                 self.musicabg.play()
@@ -140,7 +240,8 @@ class Scene(QGraphicsScene):
                 self.timer.stop()
                 self.musicabg.pause()
 
-        if Qt.Key_Control in self.keys_pressed and Qt.Key_E in self.keys_pressed:
+        if (Qt.Key_Control in self.keys_pressed 
+            and Qt.Key_E in self.keys_pressed):
             app.exit()
 
 
@@ -154,7 +255,7 @@ class Scene(QGraphicsScene):
         self.update()
 
     def game_update(self):
-        self.player.game_update(self.keys_pressed)
+        self.player.game_update(self.keys_pressed,self.mapa)
 
         for item in self.items():
             if type(item).__name__ == 'Bomba':
@@ -176,19 +277,12 @@ class Game(QGraphicsView):
         QFontDatabase.addApplicationFont(ASSETS+'emulogic.ttf')
         
 
-        #musica que se repite
-        #self.playlist = QMediaPlaylist()
-        #self.playlist.addMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
-        #self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
-
-        #self.musica = QMediaPlayer()
-        #self.musica.setPlaylist(self.playlist)
-        #self.musica.play()
+        
 
         #musica
-        self.musicahome = QMediaPlayer()
-        self.musicahome.setMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
-        self.musicahome.play()
+        self.musicho = QMediaPlayer()
+        self.musicho.setMedia(QMediaContent(QUrl(MUSIC+'01_TitleScreen.mp3')))
+        self.musicho.play()
 
         #logo
         logo = QGraphicsPixmapItem()
@@ -241,10 +335,10 @@ class Game(QGraphicsView):
         stage_texto.setPos(xt,yt)
         self.scene.addItem(stage_texto)
 
-        self.musicahome.stop()
-        self.musicastage = QMediaPlayer()
-        self.musicastage.setMedia(QMediaContent(QUrl(MUSIC+'02_StageStart.mp3')))
-        self.musicastage.play()
+        self.musicho.stop()
+        self.musicstage = QMediaPlayer()
+        self.musicstage.setMedia(QMediaContent(QUrl(MUSIC+'02_StageStart.mp3')))
+        self.musicstage.play()
 
         self.timer2 = QTimer()
         self.timer2.timeout.connect(self.start_game)
