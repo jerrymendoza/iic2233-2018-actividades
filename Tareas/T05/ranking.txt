@@ -1,0 +1,4 @@
+Jugador1,9
+Jugador1,18
+Jugador1,9
+Jugador1,42

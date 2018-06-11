@@ -35,7 +35,7 @@ from PyQt5.QtMultimedia import (
     QMediaContent
 )
 
-PUNTAJE_TIEMPO = 1
+PUNTAJE_TIEMPO = 3
 PATH = "mapa.txt"
 SCREEN_WIDTH            = 1000
 SCREEN_HEIGHT           = 800
@@ -170,9 +170,20 @@ class Scene(QGraphicsScene):
         self.addItem(bg)
 
         self.player = Player()
+        
+
         #self.player.setPos((SCREEN_WIDTH-self.player.pixmap().width())/2,
         #                   (SCREEN_HEIGHT-self.player.pixmap().height())/2)
-        self.player.setPos(800,48)
+        self.player.setPos(48,48)
+        self.player1 = back.Player(48,48)
+        texto_pj1="Puntos J1: {}".format(self.player1.puntaje)
+        self.puntaje1 = QGraphicsTextItem(texto_pj1)
+        textofont= QFont("emulogic",12)
+        self.puntaje1.setFont(textofont)
+        self.puntaje1.setDefaultTextColor(Qt.white)
+        self.puntaje1.setPos(750,540)
+        self.addItem(self.puntaje1)
+
         #musica que se repite
 
         self.playlist = QMediaPlaylist()
@@ -182,7 +193,6 @@ class Scene(QGraphicsScene):
         self.musicabg = QMediaPlayer()
         self.musicabg.setPlaylist(self.playlist)
         self.musicabg.play()
-        self.musicabg.stop()
 
         #self.musicabg = QMediaPlayer()
         #self.musicabg.setMedia(QMediaContent(QUrl(MUSIC+'03_StageTheme.mp3')))
@@ -207,12 +217,22 @@ class Scene(QGraphicsScene):
     def contar(self):
         self.inicio+=1
         self.removeItem(self.tiempo)
-        self.tiempo = QGraphicsTextItem("{}:{}:{}".format(0,0,self.inicio))
+        self.tiempo = QGraphicsTextItem("Tiempo: {} seg".format(self.inicio))
         textofont= QFont("emulogic",12)
         self.tiempo.setFont(textofont)
         self.tiempo.setDefaultTextColor(Qt.white)
         self.tiempo.setPos(750,520)
         self.addItem(self.tiempo)
+
+        self.player1.puntaje = PUNTAJE_TIEMPO*self.inicio
+        self.removeItem(self.puntaje1)
+        texto_pj1="Puntos J1: {}".format(self.player1.puntaje)
+        self.puntaje1 = QGraphicsTextItem(texto_pj1)
+        textofont= QFont("emulogic",12)
+        self.puntaje1.setFont(textofont)
+        self.puntaje1.setDefaultTextColor(Qt.white)
+        self.puntaje1.setPos(750,540)
+        self.addItem(self.puntaje1)
 
 
     def dibujar(self,mapa):
@@ -226,6 +246,9 @@ class Scene(QGraphicsScene):
             self.destructible.setPos(destruc[0]*N,destruc[1]*N)
             self.addItem(self.destructible)
 
+    def terminar(self):
+        back.guardar(("Jugador1",str(self.player1.puntaje)))
+
 
     def keyPressEvent(self, event):
         self.keys_pressed.add(event.key())
@@ -235,13 +258,16 @@ class Scene(QGraphicsScene):
             if not self.timer.isActive():
                 self.timer.start(FRAME_TIME_MS,self)
                 self.musicabg.play()
+                self.time.start(1000)
 
             else:
                 self.timer.stop()
+                self.time.stop()
                 self.musicabg.pause()
 
         if (Qt.Key_Control in self.keys_pressed 
             and Qt.Key_E in self.keys_pressed):
+            self.terminar()
             app.exit()
 
 
@@ -260,6 +286,7 @@ class Scene(QGraphicsScene):
         for item in self.items():
             if type(item).__name__ == 'Bomba':
                 item.game_update()
+
 
 class Game(QGraphicsView):
     def __init__(self,parent = None):
@@ -346,11 +373,11 @@ class Game(QGraphicsView):
         self.timer2.start(3500)
         
 
-    def top10(self,lista=[]):
+    def top10(self):
 
-        lista=[("Jerry",300),("Jerry",38700),("Jerry",38700),("Jerry",38700),
-        ("Jerry",38700),("Jerry",38700),("Jerry",38700),("Jerry",38700),
-        ("Jerry",38700),("Jerry",38700)]
+        lista=back.ranking()
+        lista.sort(key=lambda x: x[1])
+
 
         self.scene.clear()
         titulo = "TOP 10"

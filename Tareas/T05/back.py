@@ -2,6 +2,7 @@ BOMBAS_ACTIVAS = 1
 VIDAS = 3
 PLAYER_SPEED            = 12
 N = 48 #pixeles,no midificar
+
 def leer_mapa(path):
     retornar=list()
     with open(path, 'r') as file:
@@ -37,12 +38,16 @@ class Mapa():
 
         dx=int(destino[0])%N
         dy=int(destino[1])%N
+        print("----")
+        print(x,y)
 
-        #if dx>=36:
-        #    x+=1
-        #if dy>=36:
-        #    y+=1
+        
+        
 
+        print("----")
+        print(destino)
+        print(x,y)
+        print(dx,dy)
         if ((x,y) in self.indestructibles or
             (x,y) in self.destructibles or
             (x,y) in self.bombas
@@ -50,17 +55,9 @@ class Mapa():
 
             return False
 
-        #print(self.indestructibles)
-        #dentro del tablero
-        #if x<0 or x>15*N:
-        #   return False
-        #if y<0 or y>15*N:
-        #   return False
+        
         valido=True
-        #for i in self.indestructibles:
-            #48,48
-        #   if (x>=i[0]*N and x<=i[0]*(N+1)) or (y>=i[1]*N and y<=i[1]*(N+1)):
-        #       valido = False
+       
 
 
 
@@ -70,7 +67,7 @@ class Mapa():
 
 class Elemento():
 
-    def __init__(self, y, x):
+    def __init__(self, x, y):
         self.y = y
         self.x = x
 
@@ -78,10 +75,11 @@ class Elemento():
 
 class Player(Elemento):
 
-    def __init__(self, y, x):
-        Elemento.__init__(self, y, x)
+    def __init__(self, x, y):
+        Elemento.__init__(self, x, y)
         self.num_bombas = BOMBAS_ACTIVAS
         self.vidas = VIDAS
+        self.puntaje = 0
 
     def dejar_bomba(self):
         if self.num_bombas > 0:
@@ -93,7 +91,7 @@ class Player(Elemento):
 class Bomba(Elemento):
 
     def __init__(self, player):
-        Elemento.__init__(self, player.y, player.x)
+        Elemento.__init__(self, player.x, player.y)
         self.player = player
         self.radio = 3
 
@@ -103,6 +101,17 @@ class Bomba(Elemento):
 
         self.player.num_bombas += 1
    
+def guardar(item):
+    with open('ranking.txt', 'a') as file:
+        file.write(",".join(item)+"\n")
+
+def ranking():
+    lista=[]
+    with open('ranking.txt','r') as file:
+        for line in file:
+            aux=line.strip().split(",")
+            lista.append((aux[0],aux[1]))
+    return lista
 
 
 
