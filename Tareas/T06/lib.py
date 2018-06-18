@@ -1,3 +1,5 @@
+import collections
+
 def bytes_to_time(bytes):
 	l = []
 	array = bytearray(bytes)
@@ -35,6 +37,38 @@ def time_to_bytes(time):
 	final = b''.join(de_7)
 	#print(de_7)
 	return final
+
+
+def leer_notas(array):
+    while True:
+        if array.count(b'\x90')>0 and array.count(b'\x80')>0:
+            type_index = min(array.index(b'\x90'),array.index(b'\x80'))
+        elif array.count(b'\x90')==0 and array.count(b'\x80')>0:
+            type_index = array.index(b'\x80')
+        elif array.count(b'\x80')==0 and array.count(b'\x90')>0:
+            #esto no deberia ocurrir nunca
+            type_index = array.index(b'\x90') 
+        else:
+            type_index = None
+
+        if type_index != None:
+            tiempo = bytearray()
+            for _ in range(type_index):
+                tiempo.append(array.pop(0))  
+            #data = collections.OrderedDict()
+            data = {}
+            data["tiempo"] = bytes_to_time(tiempo)
+            data["tipo"] = array.pop(0)
+            data["nota"] = array.pop(0)
+            data["intensidad"] = array.pop(0)
+
+            yield data
+            #print("tiempo: {}".format(lib.bytes_to_time(tiempo)))
+            #print("tipo: {}".format(array.pop(0)))
+            #print("nota: {}".format(array.pop(0)))
+            #print("intensidad: {} \n".format(array.pop(0)))
+        else:
+            break
 
 if __name__ == '__main__':
 	
