@@ -53,11 +53,9 @@ def obtener_mejores():
     :return: [dict]
     """
     URL = "https://api.imgflip.com/get_memes"
-    my_api = requests.get(URL).json()
+    los_memes = requests.get(URL).json().get('data').get('memes')
     #json_dict = json.loads(my_api)
-   
-
-    return my_api 
+    return random.sample(los_memes,10)
 
 
 def generar_meme(template_id, username, password, text0, text1):
