@@ -1,6 +1,6 @@
 import re
 import random
-import request
+import requests
 
 from config import USERNAME, PASSWORD
 
@@ -69,7 +69,15 @@ def generar_meme(template_id, username, password, text0, text1):
     :param text1: str
     :return: str
     """
-    pass
+
+    URL = "https://api.imgflip.com/caption_image"
+
+    dic = {'template_id': template_id,
+           'username':username,'password':password, 
+           'text0': text0, 'text1': text1}
+
+    r = requests.post(URL, data=dic).json().get('data').get('url')
+    return r
 
 def menu():
     correo = input("Ingrese correo: ")
@@ -115,5 +123,5 @@ def menu():
 
 
 if __name__ == "__main__":
-    #arreglar_memes("memes.txt", "arreglados.txt")
+    arreglar_memes("memes.txt", "arreglados.txt")
     menu()
