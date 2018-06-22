@@ -13,8 +13,22 @@ def validar_correo(correo):
     :param correo: str
     :return: bool
     """
+    pattern = "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    if not bool(re.match(pattern, correo)):
+        return False
 
-    pass
+    pattern2 = "@([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
+    try:
+        dominio = re.search(pattern2, correo).group(1)
+    except:
+        return False
+    url = "http://"+dominio
+    r=requests.get(url)
+    
+    if r.status_code < 400:
+        return True
+    else: 
+        return False
 
 
 def arreglar_memes(path, pathfinal):
