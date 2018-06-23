@@ -21,11 +21,10 @@ with open(PATH,'rb') as file:
     datos['canal'] = {}
     a=file.read()
     a=bytearray(a)
-
     aux = a[0:14]
     aux2 =a[14:]
-    #print("------ HEADER ------")
-    #print(aux)
+    print("------ HEADER ------")
+    print(aux)
     #print("    Type HEADER:")
     #print(aux[0:4]) #'MThd'
     datos['header']['type']=aux[0:4].decode("ascii")
@@ -62,7 +61,7 @@ with open(PATH,'rb') as file:
 
     #print("    Data CANAL:")
     data_canal=aux2[8:largo+8]
-    #print(data_canal)
+    print(data_canal)
     datos['canal']['data'] = []
     notas = lib.leer_notas(data_canal)
     for i in notas:
@@ -72,7 +71,7 @@ with open(PATH,'rb') as file:
 
 
     print("resultado:")
-    print(json.dumps(datos, indent=3))
+    #print(json.dumps(datos, indent=3)) #SACAAAARR
     print(data_canal)
     print("---")
     
