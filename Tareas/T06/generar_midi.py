@@ -9,7 +9,7 @@ CANALES = 1
 TICKS = 160
 
 #solo notas off  [tiempo,nota,intensidad]
-notas = [[240,69,96]]
+notas = [[240,69,96],[240,69,96],[240,69,96]]
 
 def crear_header():
 	out = bytearray(b'MThd')
@@ -29,8 +29,8 @@ def crear_canal(notas):
 		agregar_nota(out2,nota[0],nota[1],nota[2])
 
 	agregar_fin(out2)
-	print(len(out2))
-	print((len(out2)).to_bytes(4,byteorder='big'))
+	#print(len(out2))
+	#print((len(out2)).to_bytes(4,byteorder='big'))
 	out.extend((len(out2)).to_bytes(4,byteorder='big'))
 	out.extend(out2)
 	#lenght out.extend((LARGOO).to_bytes(4,byteorder='big'))
@@ -38,6 +38,7 @@ def crear_canal(notas):
 
 
 def agregar_nota(array,tiempo,nota,intensidad):
+	
 	#notaON
 	tiempo_on=lib.time_to_bytes(0)
 	array.extend(tiempo_on)
@@ -76,8 +77,10 @@ C_DATA = [{"tiempo": 0, "tipo": 144, "nota": 69, "intensidad": 96},
 
 print(C_DATA)
 
-aux=crear_header()
-aux2=crear_canal(notas)
+aux=crear_header() #bytearray
+aux2=crear_canal(notas) #bytearray
+
+
 
 print(aux)
 print(aux2)

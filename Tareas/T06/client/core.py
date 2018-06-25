@@ -2,6 +2,7 @@ import threading
 import socket
 import json
 from PyQt5.QtCore import pyqtSignal, QObject
+import time
 
 class Core(QObject):
     """
@@ -18,8 +19,8 @@ class Core(QObject):
 
         self.port = 12345
 
+       
         try:
-
             self.socket_cliente.connect((self.host, self.port))
             print("Cliente conectado exitosamente al servidor...")
 
@@ -30,7 +31,6 @@ class Core(QObject):
             thread.start()
             print("Escuchando al servidor...")
             
-
         except ConnectionRefusedError:
             # Si la conexión es rechazada, entonces se 'cierra' el socket
             print("Conexión terminada")
@@ -39,7 +39,8 @@ class Core(QObject):
 
         finally:
             #obtener cosas inicial
-            self.ready()
+            self.get_ready()
+            #self.get_editing()
 
     def listen_thread(self):
         '''
@@ -108,6 +109,9 @@ class Core(QObject):
                 in_file.write(response)
                 in_file.close()
 
+            elif data["header"] == "user":
+                pass
+
         # Aquí irían otras opciones
         # elif decoded["status"] == "logout": # Ejemplo!
             # hacer algo
@@ -132,21 +136,63 @@ class Core(QObject):
 
 
 
+
     """
     Acá se escriben las peticiones a enviar!
     """
-    def ready(self):
+    def get_ready(self):
         data = {"status": "request", "data": {'header':'ready','content':''}}
         self.send(data)
 
-    def user(self, user):
+    def get_user(self, user):
         data = {"status": "request", "data": {'header':'user', 'content': user}}
         self.send(data)
 
-    def new(self,name):
+    def get_new(self,name):
         data = {"status": "request", "data": {'header':'new', 'content': name}}
         self.send(data)
 
-    def download(self,name):
+    def get_download(self,name):
         data = {"status": "request", "data": {'header':'download', 'content': name}}
+        self.send(data)
+
+    def get_editing(self):
+        data = {"status": "request", "data": {'header':'editing','content':''}}
+        self.send(data)
+
+    def exit(self):
+        data = {"status": "desconectar", "data": {}}
+        self.send(data)
+        time.sleep(1)
+        self.socket_cliente.close()
+        
+
+    #notas 
+
+    def nueva_nota(self,name,nota):
+        '''
+        name: nombre del midi
+        nota: [0,0,0,0]
+        '''
+        data = {"status": "request", "data": {'header':'crear_nota',
+                                            'content': name,
+                                            'content2': nota}}
+        self.send(data)
+
+    
+    def eliminar_nota(self,name,index):
+        '''
+        name: nombre del midi
+        index: int (posicion)
+        '''
+        data = {"status": "request", "data": {'header':'eliminar_nota',
+                                            'content': name,
+                                            'content2': index}}
+
+        self.send(data)
+    def terminar(self,name):
+        data = {"status": "request", "data": {'header':'terminar',
+                                            'content': name
+                                            }}
+
         self.send(data)

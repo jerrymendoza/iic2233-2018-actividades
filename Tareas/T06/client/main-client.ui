@@ -167,7 +167,7 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
-      <widget class="QLineEdit" name="lineEdit_2"/>
+      <widget class="QLineEdit" name="lineEditNew"/>
      </item>
      <item>
       <widget class="QPushButton" name="createButton">

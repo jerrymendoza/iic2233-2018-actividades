@@ -2,11 +2,14 @@ import threading
 import socket
 import json
 import os
-
+import core
 class Server:
     def __init__(self):
 
         self.methods = {'request': self.request}
+        self.core = core.Core()
+
+
 
         print("Inicializando servidor...")
         self.host = "0.0.0.0"
@@ -28,6 +31,8 @@ class Server:
 
         print("Servidor aceptando conexiones...")
 
+        print(" {:^8}| {:^15} | {:^10}".format("Cliente","Acción","Detalles"))
+
         self.sockets = []
 
 
@@ -35,9 +40,11 @@ class Server:
 
         while True: 
             client_socket, client_address = self.socket_servidor.accept()
-            print("Nuevo Cliente Conectado")
+            
             self.sockets.append(client_socket)
 
+            print(" {:^8}| {:15} | {}".format(
+                self.sockets.index(client_socket)+1,"Conectarse","-"))
             listening_client_thread = threading.Thread(
                     target=self.listen_client_thread,
                     args=(client_socket,),
@@ -62,7 +69,17 @@ class Server:
             response = response.decode()
 
             decoded = json.loads(response)
-            self.handle_command(decoded, client_socket)
+
+            order = decoded['status']
+            if order == 'desconectar':
+                print(" {:^8}| {:15} | {}".format(
+                self.sockets.index(client_socket)+1,"Desconectarse","-"))
+                self.sockets.remove(client_socket)
+                break
+            else:    
+                self.handle_command(decoded, client_socket)
+
+                
 
     def handle_command(self, received, client_socket):
         '''
@@ -72,7 +89,7 @@ class Server:
         :param client_socket: socket correspondiente al cliente que envió el mensaje
         :return:
         '''
-        print("Mensaje Recibido: ", received)
+        #print("Mensaje Recibido: ", received)
         order = received['status']
         if order != 'desconectar':
             foo = self.methods[order]
@@ -87,60 +104,127 @@ class Server:
         :return:
         '''
 
-        # Le hacemos json.dumps y luego lo transformamos a bytes
+
         msg_json = json.dumps(value)
         msg_bytes = msg_json.encode()
 
-        # Luego tomamos el largo de los bytes y creamos 4 bytes de esto
         msg_length = len(msg_bytes).to_bytes(4, byteorder="big")
 
-        # Finalmente, los enviamos al servidor
         socket.send(msg_length + msg_bytes)
 
     """
     Acciones a procesar
+
     """
     def request(self,client_socket,received):
 
         if received["data"]["header"]=="ready":
-            midis_listos = os.listdir("midis")
+            midis_listos = self.core.listos()
 
             data = {"status": "result", 
-            "data":{'header':'ready', 'content':midis_listos} }
+                    "data":{'header':'ready', 'content':midis_listos} }
+        
+        elif received["data"]["header"]=="editing":
+            midis_editando = self.core.editando.keys()
+            data = {"status": "result", 
+                    "data":{'header':'editing', 'content':midis_editando} }
 
         elif received["data"]["header"] == "user":
-
-            data = {"status": "result",
-                    "data": {'header':'user', 
+            if not self.core.exist_user(received["data"]['content']):
+                data = {"status": "result",
+                        "data": {'header':'user', 
                             'content': received["data"]['content']}}
 
+                print(" {:^8}| {:15} | {}".format(
+                self.sockets.index(client_socket)+1,"Usuario",
+                "A definido de usuario: "+received["data"]['content']) )
         elif received["data"]["header"] == "new":
+
+            self.core.nuevo(received["data"]['content'],client_socket)
+
+            print(" {:^8}| {:15} | {}".format(
+                self.sockets.index(client_socket)+1,"Nuevo",
+                "Crear midi: "+received["data"]['content']) )
+
             data = {"status": "result",
                     "data": {'header':'new', 
                             'content':received["data"]['content']}}
 
+
+        elif received["data"]["header"] == "crear_nota":
+            #agregar_nota(midi,usuario,nota)
+            self.core.agregar_nota(received["data"]['content'],
+                client_socket,received["data"]['content2'])
+
+            data = {"status": "result",
+                    "data": {'header':'crear_nota', 
+                            'content':received["data"]['content'],
+                            'content2':received["data"]['content2']}
+                            }
+
+        elif received["data"]["header"] == "eliminar_nota":
+            #agregar_nota(midi,usuario,nota)
+            self.core.eliminar_nota(received["data"]['content'],
+                client_socket,received["data"]['content2'])
+
+            data = {"status": "result",
+                    "data": {'header':'nota', 
+                            'content':received["data"]['content'],
+                            'content2':received["data"]['content2']}
+                            }
+
+        elif received["data"]["header"] == "terminar":
+    
+            self.core.terminar(received["data"]['content'],
+                client_socket)
+            print(" {:^8}| {:15} | {}".format(
+                self.sockets.index(client_socket)+1,"Edicion",
+                "Edicion Terminada: "+received["data"]['content']) )
+
+            data = {"status": "result",
+                    "data": {'header':'terminar', 
+                            'content':received["data"]['content']}
+                            }
+
         elif received["data"]["header"] == "download":
-            in_file = open("midis/"+received["data"]['content']+".mid", "rb")
-            info = in_file.read()
+
+            info = self.core.archivo(received["data"]['content'])
+
+            print(" {:^8}| {:15} | {}".format(
+                self.sockets.index(client_socket)+1,"Descargar",
+                received["data"]['content']+" "+str(len(info)) ))
+
             data = {"status": "result",
                     "data":{'header':'download', 
                             'content':received["data"]['content'],
                             'size':len(info)
                             }}
-            in_file.close()
+            
+            
+
         else: 
             data = {"status":None}
 
         self.send(data, client_socket)
 
+        #Si es de tipo download, se recibe el midi a continuacion
         if received["data"]["header"] == "download":
-            in_file = open("midis/"+received["data"]['content']+".mid", "rb")
-            info = in_file.read()
-            print("enviando archivo")
-            client_socket.send(info)
-            in_file.close()
+            info = self.core.archivo(received["data"]['content'])
+            contar=1
+            for dat in cortar(info,1024):
+                print(" {:^8}| {:15} | {}".format(
+                self.sockets.index(client_socket)+1,"Enviando",
+                received["data"]['content']+" Parte "+str(contar) ))
+                client_socket.send(dat)
+                contar+=1
+            print(" {:^8}| {:15} | {}".format (
+                self.sockets.index(client_socket)+1,"Completado",
+                received["data"]['content'] ))
 
 
+def cortar(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i+n]
 
 
 if __name__ == '__main__':
