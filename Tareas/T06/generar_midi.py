@@ -66,23 +66,10 @@ def agregar_fin(array):
 
 
 
-#CANAL
-C_DATA = [{"tiempo": 0, "tipo": 144, "nota": 69, "intensidad": 96},
-		  {"tiempo": 240, "tipo": 128, "nota": 69, "intensidad": 96}]
-
-#print((FORMATO).to_bytes(2,byteorder='big'))
-#print((CANALES).to_bytes(2,byteorder='big'))
-#print((TICKS).to_bytes(2,byteorder='big'))
-
-
-print(C_DATA)
 
 aux=crear_header() #bytearray
 aux2=crear_canal(notas) #bytearray
-
-
+aux.extend(aux2)
 
 print(aux)
-print(aux2)
-
 
