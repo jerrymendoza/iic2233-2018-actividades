@@ -9,6 +9,7 @@ class Core(QObject):
     Encargado de manejar la info con el servidor
     """
     lista_check = pyqtSignal(list)
+    editing_check = pyqtSignal(list)
     def __init__(self):
         super().__init__()
         print("Inicializando cliente...")
@@ -40,6 +41,7 @@ class Core(QObject):
         finally:
             #obtener cosas inicial
             self.get_ready()
+            #time.sleep(1)
             #self.get_editing()
 
     def listen_thread(self):
@@ -108,6 +110,9 @@ class Core(QObject):
                 in_file = open(data['content']+".mid", "wb")
                 in_file.write(response)
                 in_file.close()
+
+            elif data["header"] == "editing":
+                self.editing_check.emit(data['content'])
 
             elif data["header"] == "user":
                 pass

@@ -96,7 +96,7 @@ class Server:
             foo(client_socket, received)
 
     @staticmethod
-    def send(value, socket):
+    def send(value, socket=None):
         '''
         Este método envía la información al cliente correspondiente al socket.
         :param msg: diccionario del tipo {"status": tipo del mensaje, "data": información}
@@ -104,13 +104,21 @@ class Server:
         :return:
         '''
 
+        if socket!=None:
+            msg_json = json.dumps(value)
+            msg_bytes = msg_json.encode()
 
-        msg_json = json.dumps(value)
-        msg_bytes = msg_json.encode()
+            msg_length = len(msg_bytes).to_bytes(4, byteorder="big")
 
-        msg_length = len(msg_bytes).to_bytes(4, byteorder="big")
+            socket.send(msg_length + msg_bytes)
+        else:
+            for sock in self.sockets:
+                msg_json = json.dumps(value)
+                msg_bytes = msg_json.encode()
 
-        socket.send(msg_length + msg_bytes)
+                msg_length = len(msg_bytes).to_bytes(4, byteorder="big")
+
+                sock.send(msg_length + msg_bytes)
 
     """
     Acciones a procesar
@@ -125,7 +133,7 @@ class Server:
                     "data":{'header':'ready', 'content':midis_listos} }
         
         elif received["data"]["header"]=="editing":
-            midis_editando = self.core.editando.keys()
+            midis_editando = list(*self.core.editando.keys())
             data = {"status": "result", 
                     "data":{'header':'editing', 'content':midis_editando} }
 
@@ -221,6 +229,15 @@ class Server:
                 self.sockets.index(client_socket)+1,"Completado",
                 received["data"]['content'] ))
 
+    def actualizar(self):
+        midis_listos = self.core.listos()
+        midis_edicion = self.core.editando.keys()
+        data = {"status": "result", 
+                    "data":{'header':'ready', 'content':midis_listos}}
+        self.send(data, None)
+        data = {"status": "result", 
+                    "data":{'header':'editing', 'content':midis_edicion}}
+        self.send(data, None)  
 
 def cortar(l, n):
     for i in range(0, len(l), n):

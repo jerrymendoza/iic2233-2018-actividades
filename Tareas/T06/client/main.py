@@ -27,7 +27,8 @@ class MainWindow(window_name, base_class):
         
         self.core.lista_check.connect(self.setListos)
      
-
+        self.core.editing_check.connect(self.setEditing)
+     
 
     def test(self):
         """
@@ -49,6 +50,23 @@ class MainWindow(window_name, base_class):
             for nombre in lista:
                 # Create an item with a caption
                 item = QStandardItem(nombre[:-4])
+             
+                # Add a checkbox to it
+                item.setEditable(False)
+             
+                # Add the item to the model
+                model.appendRow(item)
+            list.setModel(model)
+    def setEditing(self,lista=[]):
+        if not lista:
+            self.core.get_editing()
+        else:
+            list = self.listView
+            model = QStandardItemModel(list)
+
+            for nombre in lista:
+                # Create an item with a caption
+                item = QStandardItem(nombre)
              
                 # Add a checkbox to it
                 item.setEditable(False)
