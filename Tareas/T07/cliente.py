@@ -143,9 +143,9 @@ while True:
         
         contador=0
         for i in tiempo:
-            texto="Ingrese A/D si debe Activar o Desactivar  la opción "
+            texto="Ingrese A/D si debe Activar o Desactivar  la opción '"
             texto+=nombre_tiempo[contador]
-            texto+=" según corresponda."
+            texto+="' según corresponda."
             print(texto)
             print("Omitir para mantener estado actual.")
             aux=input()
