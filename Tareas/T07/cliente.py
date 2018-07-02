@@ -139,7 +139,23 @@ while True:
 
 
     elif ans=="2":
-        print("\n Cambiar configuración de reportes") 
+        print("\n Cambiar configuración de reportes")
+        
+        contador=0
+        for i in tiempo:
+            texto="Ingrese A/D si debe Activar o Desactivar  la opción "
+            texto+=nombre_tiempo[contador]
+            texto+=" según corresponda."
+            print(texto)
+            print("Omitir para mantener estado actual.")
+            aux=input()
+            if aux=="A":
+                tiempo[i]=True
+            elif aux=="D":
+                tiempo[i]=False
+            print()
+            contador+=1
+
 
     elif ans=="3":
 

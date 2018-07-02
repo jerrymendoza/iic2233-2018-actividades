@@ -132,7 +132,13 @@ def request():
                 contenido_email+= '   Nubosidad: '+str(data['clouds']['all'])+'\n'
             contenido_email+='\n'
 
-    #if tiempo[1]=="1":
+    #if uv[1]=="1":
+    #    for ciudad in ciudades:
+    #        url_aux=url+'id='+ciudad+'&appid='+KEY_OPENWEATHER
+    #        url_aux+="&lang=es" #espanol
+    #        if sistema!='kelvin':
+    #            url_aux+='&units='+sistema
+    #        uv = requests.get(url_aux)
 
 
 
