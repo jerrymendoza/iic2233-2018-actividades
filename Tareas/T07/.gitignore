@@ -1,6 +1,5 @@
 *.txt
 *.csv
 *.pdf
-*.json
 city.list.json.gz
-datos.py
+city.list.json
